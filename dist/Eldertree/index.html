@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"
+    />
+    <title>ArcanesVault — Mystic Grid</title>
+    <link rel="icon" href="/assets/logo-XB48C91C.webp" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --bg1: #0a0514;
+        --bg2: #110a26;
+        --glass: rgba(255, 255, 255, 0.06);
+        --frame: rgba(255, 255, 255, 0.12);
+        --purple: #8b5cf6;
+        --purple-glow: rgba(139, 92, 246, 0.55);
+        --cyan: #3cf2ff;
+        --cyan-glow: rgba(60, 242, 255, 0.55);
+        --gold: #ffd465;
+        --w: 1280px;
+        --h: 720px;
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+        background: radial-gradient(
+            1100px 600px at 50% 10%,
+            rgba(139, 92, 246, 0.2),
+            transparent 70%
+          ),
+          radial-gradient(
+            900px 500px at 80% 70%,
+            rgba(60, 242, 255, 0.15),
+            transparent 75%
+          ),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+        font-family: Inter, sans-serif;
+        color: #fff;
+        touch-action: none;
+      }
+      #stage {
+        position: absolute;
+        width: var(--w);
+        height: var(--h);
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%) scale(1);
+        transform-origin: center center;
+        background: #0a0716;
+        border-radius: 22px;
+        box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        overflow: hidden;
+        isolation: isolate;
+      }
+      .aurora {
+        position: absolute;
+        inset: 0;
+        background: radial-gradient(
+            900px 600px at 20% 15%,
+            rgba(60, 242, 255, 0.15),
+            transparent 60%
+          ),
+          radial-gradient(
+            900px 600px at 80% 80%,
+            rgba(139, 92, 246, 0.16),
+            transparent 60%
+          ),
+          linear-gradient(180deg, #0c0820, #120a28);
+        pointer-events: none;
+      }
+      .glass {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.06),
+          rgba(255, 255, 255, 0.015)
+        );
+        border: 1px solid var(--frame);
+        border-radius: 14px;
+        backdrop-filter: blur(12px) saturate(130%);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+      }
+      .cell {
+        background: linear-gradient(
+          180deg,
+          rgba(255, 255, 255, 0.04),
+          rgba(255, 255, 255, 0.015)
+        );
+        border-radius: 12px;
+        border: 1px solid rgba(139, 92, 246, 0.35);
+        aspect-ratio: 1/1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: inset 0 0 18px rgba(139, 92, 246, 0.25),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+        transition: 0.2s ease;
+      }
+      .cell:hover {
+        transform: translateY(-3px);
+        box-shadow: inset 0 0 30px rgba(139, 92, 246, 0.35),
+          0 0 20px rgba(60, 242, 255, 0.45);
+      }
+      .symbol {
+        font-size: 2.4rem;
+        transition: 0.18s ease;
+        filter: drop-shadow(0 0 8px rgba(139, 92, 246, 0.5))
+          drop-shadow(0 0 12px rgba(60, 242, 255, 0.4));
+      }
+      .symbol.wild {
+        animation: wildPulse 1.3s ease-in-out infinite;
+      }
+      @keyframes wildPulse {
+        0%,
+        100% {
+          transform: scale(1);
+          filter: drop-shadow(0 0 16px #ffd465);
+        }
+        50% {
+          transform: scale(1.18);
+          filter: drop-shadow(0 0 26px #ffe38a);
+        }
+      }
+      .win-cell {
+        animation: winPulse 0.9s ease-in-out infinite;
+      }
+      @keyframes winPulse {
+        0%,
+        100% {
+          background: rgba(255, 210, 75, 0.25);
+          box-shadow: inset 0 0 0 1px rgba(255, 210, 75, 0.9),
+            0 0 22px rgba(255, 210, 75, 0.9);
+        }
+        50% {
+          background: rgba(255, 210, 75, 0.35);
+          box-shadow: inset 0 0 0 1px #ffd24b, 0 0 28px #ffd24b;
+        }
+      }
+      #slotMachine {
+        position: relative;
+      }
+      .win-line {
+        position: absolute;
+        height: 4px;
+        background: linear-gradient(90deg, transparent, #ffd465, transparent);
+        box-shadow: 0 0 16px #ffd465;
+        animation: linePulse 0.6s infinite ease-in-out;
+        pointer-events: none;
+      }
+      @keyframes linePulse {
+        0%,
+        100% {
+          opacity: 0.75;
+        }
+        50% {
+          opacity: 1;
+        }
+      }
+      .btn {
+        background: linear-gradient(
+          140deg,
+          rgba(139, 92, 246, 0.3),
+          rgba(60, 242, 255, 0.25)
+        );
+        border: 1px solid rgba(139, 92, 246, 0.4);
+        padding: 0.7rem 1rem;
+        border-radius: 12px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+        transition: 0.2s;
+        box-shadow: 0 5px 20px rgba(139, 92, 246, 0.35);
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 30px rgba(139, 92, 246, 0.55);
+      }
+      .btn-spin {
+        background: linear-gradient(145deg, #ffe38a, #ffb200);
+        border: 1px solid rgba(255, 255, 255, 0.25);
+        color: #251800;
+        font-size: 1.15rem;
+        box-shadow: 0 0 28px rgba(255, 210, 90, 0.5);
+        animation: spinGlow 2s ease-in-out infinite;
+      }
+      @keyframes spinGlow {
+        0%,
+        100% {
+          box-shadow: 0 0 25px rgba(255, 210, 75, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 40px rgba(255, 210, 75, 0.85);
+        }
+      }
+      .hudTitle {
+        opacity: 0.75;
+        font-size: 0.8rem;
+        text-transform: uppercase;
+      }
+      .hudValue {
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-shadow: 0 0 10px rgba(139, 92, 246, 0.45);
+      }
+    </style>
+  </head>
+  <body>
+    <div id="stage">
+      <div class="aurora"></div>
+      <div
+        class="w-full h-full p-4 grid grid-cols-[1fr_1.6fr_1fr] gap-4 relative z-10"
+      >
+        <div class="flex flex-col gap-4">
+          <div id="freeSpinsDisplay" class="glass p-4 hidden text-center">
+            <div class="hudTitle">Free Spins</div>
+            <div id="freeSpinsCount" class="hudValue text-2xl">0</div>
+          </div>
+          <div id="multiplierDisplay" class="glass p-4 hidden text-center">
+            <div class="hudTitle">Multiplier</div>
+            <div id="currentMultiplier" class="hudValue text-xl">×1</div>
+          </div>
+          <button id="paytableBtn" class="btn">Paytable</button>
+          <button id="historyBtn" class="btn">History</button>
+          <button id="achievementsBtn" class="btn">Achievements</button>
+          <div class="glass p-4 text-center">
+            <div class="hudTitle">Zoom</div>
+            <div class="flex justify-center gap-2 mt-2">
+              <button id="zoomOutBtn" class="btn px-3 py-1">–</button>
+              <button id="zoomInBtn" class="btn px-3 py-1">+</button>
+            </div>
+          </div>
+        </div>
+        <div class="grid grid-rows-[auto_1fr_auto] gap-4">
+          <div class="glass p-4">
+            <div
+              class="h-4 rounded-full bg-[#1a152a] border border-white/10 overflow-hidden"
+            >
+              <div
+                id="comboFill"
+                class="h-full w-0 bg-gradient-to-r from-cyan-400 to-yellow-300"
+                style="box-shadow: 0 0 12px rgba(60, 242, 255, 0.6)"
+              ></div>
+            </div>
+            <div class="hudTitle text-center mt-2">
+              Combo: <span id="comboText">0</span> / 10
+            </div>
+          </div>
+          <div class="glass p-4 relative overflow-hidden">
+            <div
+              id="slotMachine"
+              class="grid gap-2"
+              style="grid-template-columns: repeat(6, 1fr)"
+            ></div>
+          </div>
+          <div class="flex flex-wrap gap-3 justify-center">
+            <button id="decreaseBet" class="btn">–</button>
+            <button id="maxBet" class="btn">MAX</button>
+            <button id="spinBtn" class="btn btn-spin">SPIN</button>
+            <button id="autoSpinBtn" class="btn">AUTO</button>
+            <button id="increaseBet" class="btn">+</button>
+            <button id="soundBtn" class="btn">🔊</button>
+          </div>
+        </div>
+        <div class="flex flex-col gap-4">
+          <div class="glass p-4 flex items-center justify-center min-h-[220px]">
+            <img
+              src="/assets/logo-XB48C91C.webp"
+              id="characterImg"
+              class="w-full rounded-xl"
+              alt=""
+            />
+          </div>
+          <div class="glass p-4">
+            <div class="grid grid-cols-4 gap-2 text-center">
+              <div class="glass p-2">
+                <div class="hudTitle">Balance</div>
+                <div id="balance" class="hudValue">1000</div>
+              </div>
+              <div class="glass p-2">
+                <div class="hudTitle">Bet</div>
+                <div id="currentBet" class="hudValue">1</div>
+              </div>
+              <div class="glass p-2">
+                <div class="hudTitle">Win</div>
+                <div id="totalWin" class="hudValue text-green-300">0</div>
+              </div>
+              <div class="glass p-2">
+                <div class="hudTitle">Combo</div>
+                <div id="comboCount" class="hudValue text-yellow-300">×1</div>
+              </div>
+            </div>
+            <div class="mt-6"></div>
+            <div class="grid grid-cols-2 gap-2 text-sm">
+              <div>Spins</div>
+              <div id="totalSpins" class="text-right">0</div>
+              <div>Wins</div>
+              <div id="totalWins" class="text-right">0</div>
+              <div>Best</div>
+              <div id="biggestWin" class="text-right">0</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div
+        id="achievementsArea"
+        class="absolute right-4 top-4 flex flex-col gap-3 z-50"
+      ></div>
+    </div>
+    <script>
+      const BASE_W = 1280,
+        BASE_H = 720,
+        stage = document.getElementById("stage");
+      function fit() {
+        const e = window.innerWidth,
+          t = window.innerHeight,
+          n = Math.min(e / 1280, t / 720) * zoom;
+        (stage.style.position = "absolute"),
+          (stage.style.left = "50%"),
+          (stage.style.top = "50%"),
+          (stage.style.transformOrigin = "center center"),
+          (stage.style.transform = `translate(-50%, -50%) scale(${n})`);
+      }
+      let zoom = 1;
+      document.getElementById("zoomInBtn").addEventListener("click", () => {
+        (zoom = Math.min(zoom + 0.05, 1.5)), fit();
+      }),
+        document.getElementById("zoomOutBtn").addEventListener("click", () => {
+          (zoom = Math.max(zoom - 0.05, 0.5)), fit();
+        }),
+        addEventListener("resize", fit, { passive: !0 }),
+        addEventListener("orientationchange", () => setTimeout(fit, 50), {
+          passive: !0,
+        }),
+        document.addEventListener("gesturestart", (e) => e.preventDefault()),
+        document.addEventListener(
+          "touchmove",
+          (e) => {
+            e.scale && 1 !== e.scale && e.preventDefault();
+          },
+          { passive: !1 }
+        ),
+        fit();
+      const SYMBOLS = {
+          shard: { emoji: "⟡", name: "Shard", multiplier: 2, weight: 2 },
+          spark: { emoji: "✦", name: "Spark", multiplier: 3, weight: 1 },
+          moon: { emoji: "☽", name: "Moon Sigil", multiplier: 5, weight: 1 },
+          glyph: { emoji: "⟁", name: "Glyph", multiplier: 8, weight: 1 },
+          orb: { emoji: "⧖", name: "Arcane Orb", multiplier: 12, weight: 1 },
+          rune: { emoji: "ᚠ", name: "Rune", multiplier: 20, weight: 1 },
+          ultra: { emoji: "⚚", name: "Astral Mark", multiplier: 50, weight: 1 },
+          crown: { emoji: "⌖", name: "Royal Mark", multiplier: 100, weight: 1 },
+          mega: { emoji: "⚷", name: "Mythic", multiplier: 180, weight: 1 },
+          scatter: { emoji: "🜁", name: "Scatter", multiplier: 0, weight: 0.5 },
+          wild: { emoji: "✨", name: "Wild", multiplier: 0, weight: 0.3 },
+        },
+        BETS = [1, 3, 5, 10, 25, 50, 100, 250, 500],
+        GRID_SIZE = 6;
+      let gameState = {
+        balance: 1e3,
+        currentBetIndex: 0,
+        freeSpins: 0,
+        isSpinning: !1,
+        soundEnabled: !0,
+        autoSpin: !1,
+        reels: [],
+        combo: 0,
+        multiplier: 1,
+        totalSpins: 0,
+        totalWinsCount: 0,
+        biggestWin: 0,
+        history: [],
+        achievements: {
+          firstWin: !1,
+          bigWin: !1,
+          megaWin: !1,
+          scatter5: !1,
+          combo10: !1,
+          lucky777: !1,
+        },
+      };
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      function playSound(e, t, n = "sine", i = 0.3) {
+        if (!gameState.soundEnabled) return;
+        const a = audioContext.createOscillator(),
+          o = audioContext.createGain();
+        a.connect(o),
+          o.connect(audioContext.destination),
+          (a.frequency.value = e),
+          (a.type = n),
+          o.gain.setValueAtTime(i, audioContext.currentTime),
+          o.gain.exponentialRampToValueAtTime(
+            0.01,
+            audioContext.currentTime + t
+          ),
+          a.start(),
+          a.stop(audioContext.currentTime + t);
+      }
+      function playWinSound(e) {
+        const t = e / BETS[gameState.currentBetIndex];
+        if (t >= 50)
+          for (let e = 0; e < 5; e++)
+            setTimeout(
+              () => playSound(800 + 100 * e, 0.3, "square", 0.4),
+              100 * e
+            );
+        else
+          t >= 20
+            ? (playSound(600, 0.3, "triangle", 0.3),
+              setTimeout(() => playSound(800, 0.3, "triangle", 0.3), 150))
+            : playSound(500, 0.2, "sine", 0.22);
+      }
+      function init() {
+        createGrid(), updateDisplay(), bindUI();
+      }
+      function createGrid() {
+        const e = document.getElementById("slotMachine");
+        (e.innerHTML = ""), (gameState.reels = []);
+        for (let t = 0; t < 6; t++) {
+          gameState.reels[t] = [];
+          for (let n = 0; n < 6; n++) {
+            const i = document.createElement("div");
+            (i.className = "cell"), (i.id = `cell-${n}-${t}`);
+            const a = document.createElement("div");
+            a.className = "symbol";
+            const o = pickSymbol();
+            (a.textContent = o),
+              o === SYMBOLS.wild.emoji && a.classList.add("wild"),
+              i.appendChild(a),
+              e.appendChild(i),
+              (gameState.reels[t][n] = o);
+          }
+        }
+      }
+      function pickSymbol() {
+        const e = Object.values(SYMBOLS),
+          t = e.reduce((e, t) => e + t.weight, 0);
+        let n = Math.random() * t;
+        for (const t of e) if (((n -= t.weight), n <= 0)) return t.emoji;
+        return e[0].emoji;
+      }
+      function $(e) {
+        return document.getElementById(e);
+      }
+      function bindUI() {
+        $("spinBtn").addEventListener("click", spin),
+          $("increaseBet").addEventListener("click", () => {
+            gameState.currentBetIndex < BETS.length - 1 &&
+              (gameState.currentBetIndex++,
+              updateDisplay(),
+              playSound(520, 0.08));
+          }),
+          $("decreaseBet").addEventListener("click", () => {
+            gameState.currentBetIndex > 0 &&
+              (gameState.currentBetIndex--,
+              updateDisplay(),
+              playSound(420, 0.08));
+          }),
+          $("maxBet").addEventListener("click", () => {
+            (gameState.currentBetIndex = BETS.length - 1),
+              updateDisplay(),
+              playSound(640, 0.12);
+          }),
+          $("soundBtn").addEventListener("click", () => {
+            (gameState.soundEnabled = !gameState.soundEnabled),
+              ($("soundBtn").textContent = gameState.soundEnabled
+                ? "🔊"
+                : "🔇"),
+              playSound(600, 0.08);
+          }),
+          $("autoSpinBtn").addEventListener("click", toggleAutoSpin),
+          $("paytableBtn").addEventListener("click", showPaytable),
+          $("historyBtn").addEventListener("click", showHistory),
+          $("achievementsBtn").addEventListener("click", showAchievements);
+      }
+      async function toggleAutoSpin() {
+        if (
+          ((gameState.autoSpin = !gameState.autoSpin),
+          gameState.autoSpin && !gameState.isSpinning)
+        ) {
+          for (
+            ;
+            gameState.autoSpin &&
+            gameState.balance >= BETS[gameState.currentBetIndex];
+
+          )
+            await spin(), await new Promise((e) => setTimeout(e, 750));
+          gameState.autoSpin = !1;
+        }
+      }
+      async function spin() {
+        if (gameState.isSpinning) return;
+        const e = BETS[gameState.currentBetIndex];
+        if (0 === gameState.freeSpins && gameState.balance < e)
+          return (
+            showModal(
+              "Not enough coins",
+              "This is a free-to-play demo. All coins are virtual."
+            ),
+            void (gameState.autoSpin = !1)
+          );
+        (gameState.isSpinning = !0),
+          gameState.totalSpins++,
+          ($("spinBtn").disabled = !0),
+          clearHighlights(),
+          0 === gameState.freeSpins
+            ? (gameState.balance -= e)
+            : gameState.freeSpins--,
+          updateDisplay(),
+          playSound(220, 0.35, "sawtooth", 0.2),
+          await animateSpin();
+        const t = checkAllWins(),
+          n = countSymbol(SYMBOLS.scatter.emoji);
+        if (n >= 3) {
+          const e = n + 2;
+          (gameState.freeSpins += e),
+            playSound(820, 0.4, "square", 0.4),
+            setTimeout(
+              () => showModal(`${n} SCATTERS!`, `+${e} Free Spins`),
+              250
+            ),
+            n >= 5 && unlock("scatter5");
+        }
+        if (t.totalWin > 0) {
+          gameState.combo++,
+            (gameState.multiplier = Math.min(1 + 0.5 * gameState.combo, 10));
+          const n = Math.floor(t.totalWin * gameState.multiplier);
+          (gameState.balance += n),
+            gameState.totalWinsCount++,
+            n > gameState.biggestWin && (gameState.biggestWin = n),
+            gameState.history.unshift({
+              bet: e,
+              win: n,
+              m: gameState.multiplier,
+              combo: gameState.combo,
+            }),
+            gameState.history.length > 20 && gameState.history.pop(),
+            ($("totalWin").textContent = n),
+            playWinSound(n),
+            n >= 20 * e && unlock("bigWin"),
+            n >= 100 * e && unlock("megaWin"),
+            gameState.combo >= 10 && unlock("combo10");
+        } else (gameState.combo = 0), (gameState.multiplier = 1);
+        updateDisplay(),
+          (gameState.isSpinning = !1),
+          ($("spinBtn").disabled = !1);
+      }
+      async function animateSpin() {
+        const e = [];
+        for (let t = 0; t < 6; t++)
+          e.push(
+            new Promise((e) => {
+              const n = [];
+              for (let e = 0; e < 6; e++) {
+                const i = document.getElementById(`cell-${e}-${t}`);
+                n.push(i), i.classList.add("spinning");
+              }
+              setTimeout(() => {
+                n.forEach((e, n) => {
+                  e.classList.remove("spinning", "wild");
+                  const i = pickSymbol(),
+                    a = e.querySelector(".symbol");
+                  (a.textContent = i),
+                    a.classList.remove("wild"),
+                    (gameState.reels[t][n] = i),
+                    i === SYMBOLS.wild.emoji && a.classList.add("wild");
+                }),
+                  playSound(320 + 50 * t, 0.18, "sine", 0.16),
+                  e();
+              }, 650 + 140 * t);
+            })
+          );
+        await Promise.all(e);
+      }
+     function checkAllWins() {
+    const wins = [];
+    let total = 0;
+
+    // только горизонтали
+    for (let row = 0; row < 6; row++) {
+        const line = [];
+        for (let col = 0; col < 6; col++) {
+            line.push([col, row]);
+        }
+        const result = evalLine(line);
+        if (result.win > 0) {
+            wins.push(result);
+            total += result.win;
+        }
+    }
+
+    return {
+        wins,
+        totalWin: total,
+        winCount: wins.length
+    };
+}
+
+function evalLine(e) {
+    const t = e.map(([e, t]) => gameState.reels[t][e]),
+          n = {};
+    let i = 0;
+
+    // ❗ Если Shard есть в линии — линия автоматически проигрышная
+    if (t.includes(SYMBOLS.shard.emoji)) {
+        return { win: 0 };
+    }
+
+    t.forEach((symbol) => {
+        if (symbol === SYMBOLS.wild.emoji) {
+            i++;
+        } 
+        else if (symbol !== SYMBOLS.scatter.emoji) {
+            n[symbol] = (n[symbol] || 0) + 1;
+        }
+    });
+
+        let a = 0,
+          o = null;
+        for (const [e, t] of Object.entries(n)) {
+          const n = t + i;
+          n >= 3 && n > a && ((a = n), (o = e));
+        }
+        if (!o) return { win: 0 };
+        const s = Object.values(SYMBOLS).find((e) => e.emoji === o);
+        if (!s) return { win: 0 };
+        const l = BETS[gameState.currentBetIndex],
+          c = a >= 6 ? 2 : a >= 5 ? 1.5 : 1,
+          r = Math.floor(s.multiplier * l * c);
+        return highlight(e), { line: e, symbol: s, count: a, win: r };
+      }
+      function countSymbol(e) {
+        let t = 0;
+        for (const n of gameState.reels) for (const i of n) i === e && t++;
+        return t;
+      }
+      function highlight(e) {
+        if (
+          (e.forEach(([e, t]) =>
+            document.getElementById(`cell-${e}-${t}`).classList.add("win-cell")
+          ),
+          e.length >= 2)
+        ) {
+          const t = document.getElementById(`cell-${e[0][0]}-${e[0][1]}`),
+            n = document.getElementById(
+              `cell-${e[e.length - 1][0]}-${e[e.length - 1][1]}`
+            ),
+            i = document.getElementById("slotMachine").getBoundingClientRect(),
+            a = t.getBoundingClientRect(),
+            o = n.getBoundingClientRect(),
+            s = a.left + a.width / 2 - i.left,
+            l = a.top + a.height / 2 - i.top,
+            c = o.left + o.width / 2 - i.left,
+            r = o.top + o.height / 2 - i.top,
+            m = Math.hypot(c - s, r - l),
+            d = (180 * Math.atan2(r - l, c - s)) / Math.PI,
+            u = document.createElement("div");
+          (u.className = "win-line"),
+            (u.style.width = `${m}px`),
+            (u.style.left = `${s}px`),
+            (u.style.top = `${l}px`),
+            (u.style.transform = `rotate(${d}deg)`),
+            (u.style.transformOrigin = "0 50%"),
+            document.getElementById("slotMachine").appendChild(u);
+        }
+      }
+      function clearHighlights() {
+        document
+          .querySelectorAll(".win-cell")
+          .forEach((e) => e.classList.remove("win-cell")),
+          document.querySelectorAll(".win-line").forEach((e) => e.remove());
+      }
+      function showModal(e, t) {
+        const n = document.createElement("div");
+        (n.style.cssText =
+          "\n        position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:50;\n        background:rgba(0,0,0,.65); animation: fadeIn .2s ease;\n      "),
+          (n.innerHTML = `\n        <div class="glass" style="max-width:500px; width:90%; padding:22px; text-align:center; border-radius:18px;">\n          <div style="font-size:2rem; margin-bottom:8px">✨</div>\n          <div class="info" style="font-size:1.4rem; margin-bottom:6px">${e}</div>\n          <div style="opacity:.9; line-height:1.5">${t}</div>\n          <button class="btn btn-spin" style="margin-top:14px">OK</button>\n        </div>\n      `),
+          n.querySelector("button").addEventListener("click", () => n.remove()),
+          stage.appendChild(n);
+      }
+      function showPaytable() {
+        modalWrap(
+          `\n        <div class="info" style="text-align:center; font-size:1.4rem; margin-bottom:10px">Paytable</div>\n        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px">${Object.values(
+            SYMBOLS
+          )
+            .filter(
+              (e) =>
+                e.emoji !== SYMBOLS.scatter.emoji &&
+                e.emoji !== SYMBOLS.wild.emoji
+            )
+            .map(
+              (e) =>
+                `\n        <div class="glass" style="padding:10px; text-align:center">\n          <div style="font-size:1.8rem">${e.emoji}</div>\n          <div class="subtle" style="margin-top:4px">${e.name}</div>\n          <div class="info" style="color:#ffe38a">x${e.multiplier}</div>\n        </div>\n      `
+            )
+            .join(
+              ""
+            )}</div>\n        <div style="margin-top:12px; opacity:.9">\n          <div>✨ <b>Wild</b> substitutes all symbols</div>\n          <div>🜁 <b>Scatter</b> 3+ grants Free Spins</div>\n          <div style="color:#ffe38a">Combo increases multiplier up to ×10</div>\n        </div>\n      `
+        );
+      }
+      function showHistory() {
+        let e = "";
+        (e =
+          0 === gameState.history.length
+            ? '<div style="text-align:center; opacity:.9">No spins yet</div>'
+            : gameState.history
+                .map(
+                  (e, t) =>
+                    `\n          <div class="glass" style="padding:10px; display:flex; justify-content:space-between;">\n            <div>Spin #${
+                      gameState.totalSpins - t
+                    }</div>\n            <div class="info" style="color:#b7ffb7">+${
+                      e.win
+                    }</div>\n          </div>\n        `
+                )
+                .join("")),
+          modalWrap(
+            `\n        <div class="info" style="text-align:center; font-size:1.4rem; margin-bottom:10px">History</div>\n        <div style="display:flex; flex-direction:column; gap:8px; max-height:320px; overflow:auto">${e}</div>\n      `
+          );
+      }
+      function showAchievements() {
+        modalWrap(
+          `\n        <div class="info" style="text-align:center; font-size:1.4rem; margin-bottom:10px">Achievements</div>\n        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px">${[
+            {
+              key: "firstWin",
+              icon: "🎯",
+              title: "First Win",
+              desc: "Win any spin",
+            },
+            {
+              key: "bigWin",
+              icon: "💰",
+              title: "Big Win",
+              desc: "Win ×20 bet",
+            },
+            {
+              key: "megaWin",
+              icon: "💎",
+              title: "Mega Win",
+              desc: "Win ×100 bet",
+            },
+            {
+              key: "scatter5",
+              icon: "🜁",
+              title: "Scatter Master",
+              desc: "Get 5+ scatters",
+            },
+            {
+              key: "combo10",
+              icon: "🔥",
+              title: "Combo Master",
+              desc: "Reach combo ×10",
+            },
+            {
+              key: "lucky777",
+              icon: "7️⃣",
+              title: "Lucky 777",
+              desc: "Collect 5+ sevens",
+            },
+          ]
+            .map((e) => {
+              const t = gameState.achievements[e.key];
+              return `\n          <div class="glass" style="padding:12px; border:1px solid ${
+                t ? "rgba(250,204,21,.7)" : "rgba(255,255,255,.1)"
+              }; ${
+                t ? "" : "opacity:.6"
+              }">\n            <div style="font-size:1.6rem">${
+                t ? e.icon : "🔒"
+              }</div>\n            <div class="info" style="margin-top:4px">${
+                e.title
+              }</div>\n            <div class="subtle">${
+                e.desc
+              }</div>\n            <div style="margin-top:6px; ${
+                t ? "color:#b7ffb7" : "opacity:.7"
+              }">${
+                t ? "Unlocked" : "Locked"
+              }</div>\n          </div>\n        `;
+            })
+            .join("")}</div>\n      `
+        );
+      }
+      function modalWrap(e) {
+        const t = document.createElement("div");
+        (t.style.cssText =
+          "position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:50; background:rgba(0,0,0,.65)"),
+          (t.innerHTML = `<div class="glass" style="max-width:640px; width:90%; padding:16px;">${e}<div style="display:flex; justify-content:center; margin-top:10px"><button class="btn btn-spin">Close</button></div></div>`),
+          t.querySelector("button").addEventListener("click", () => t.remove()),
+          stage.appendChild(t);
+      }
+      function unlock(e) {
+        gameState.achievements[e] ||
+          ((gameState.achievements[e] = !0), toastAchievement(e));
+      }
+      function toastAchievement(e) {
+        const t = {
+          firstWin: { icon: "🎯", title: "First Win!" },
+          bigWin: { icon: "💰", title: "Big Win!" },
+          megaWin: { icon: "💎", title: "Mega Win!" },
+          scatter5: { icon: "🜁", title: "Scatter Master!" },
+          combo10: { icon: "🔥", title: "Combo Master!" },
+          lucky777: { icon: "7️⃣", title: "Lucky 777!" },
+        }[e];
+        if (!t) return;
+        const n = document.createElement("div");
+        (n.className = "glass"),
+          (n.style.cssText =
+            "padding:10px 12px; display:flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.12);"),
+          (n.innerHTML = `<div style="font-size:1.4rem">${t.icon}</div><div><div class="subtle" style="text-transform:uppercase; letter-spacing:.08em">Achievement</div><div class="info">${t.title}</div></div>`),
+          document.getElementById("achievementsArea").appendChild(n),
+          playSound(900, 0.25, "square", 0.3),
+          setTimeout(() => playSound(1200, 0.25, "square", 0.3), 120),
+          setTimeout(() => {
+            (n.style.opacity = "0"),
+              (n.style.transform = "translateX(12px)"),
+              setTimeout(() => n.remove(), 260);
+          }, 3800);
+      }
+      function updateDisplay() {
+        ($("balance").textContent = gameState.balance),
+          ($("currentBet").textContent = BETS[gameState.currentBetIndex]),
+          ($("comboCount").textContent = `×${gameState.combo}`),
+          ($("totalSpins").textContent = gameState.totalSpins),
+          ($("totalWins").textContent = gameState.totalWinsCount),
+          ($("biggestWin").textContent = gameState.biggestWin);
+        const e = Math.min((gameState.combo / 10) * 100, 100);
+        ($("comboFill").style.width = `${e}%`),
+          ($("comboText").textContent = gameState.combo),
+          gameState.freeSpins > 0
+            ? (($("freeSpinsDisplay").style.display = "block"),
+              ($("freeSpinsCount").textContent = gameState.freeSpins))
+            : ($("freeSpinsDisplay").style.display = "none"),
+          gameState.multiplier > 1
+            ? (($("multiplierDisplay").style.display = "block"),
+              ($(
+                "currentMultiplier"
+              ).textContent = `×${gameState.multiplier.toFixed(1)}`))
+            : ($("multiplierDisplay").style.display = "none");
+      }
+      init();
+    </script>
+  </body>
+</html>

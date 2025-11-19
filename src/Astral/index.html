@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ArcaneVault — Mystic Slot</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --av-purple: #7f2cff;
+      --av-cyan: #3cf2ff;
+      --av-blue: #2935ff;
+      --av-dark: #070410;
+      --av-neon: rgba(130, 61, 255, .65);
+      --av-cyan-neon: rgba(60, 255, 255, .6);
+    }
+
+    * { box-sizing: border-box; margin:0; padding:0; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background:
+        radial-gradient(900px 600px at 50% 10%, rgba(127,44,255,.25), transparent 70%),
+        radial-gradient(600px 400px at 80% 60%, rgba(60,255,255,.18), transparent 70%),
+        linear-gradient(180deg, #05030a 0%, #0b0614 60%, #0a0718 100%);
+      color:#fff;
+      overflow:hidden;
+    }
+
+    /* ———————————— Background orbs ———————————— */
+    .orb { position:absolute; border-radius:50%; mix-blend-mode:screen; filter:blur(60px); animation:float 14s infinite alternate ease-in-out; }
+    #orb1 { width:260px; height:260px; top:15%; left:12%; background:var(--av-neon); }
+    #orb2 { width:160px; height:160px; top:65%; left:70%; background:var(--av-cyan-neon); animation-delay:3s; }
+    #orb3 { width:200px; height:200px; top:40%; left:45%; background:rgba(80,120,255,.22); animation-delay:6s; }
+
+    @keyframes float {
+      0% { transform:translate(0,0) scale(1); opacity:.65; }
+      100% { transform:translate(40px,-35px) scale(1.25); opacity:1; }
+    }
+
+    /* ———————————— ArcaneVault Slot Container ———————————— */
+    .slot-container {
+      background:rgba(10,6,25,.75);
+      border:2px solid rgba(130,61,255,.45);
+      border-radius:20px;
+      box-shadow:
+        0 0 40px rgba(130,61,255,.45),
+        inset 0 0 20px rgba(255,255,255,.03),
+        inset 0 0 35px rgba(60,255,255,.12);
+      backdrop-filter:blur(8px);
+      position:relative;
+    }
+
+    .slot-glow {
+      position:absolute;
+      inset:0;
+      pointer-events:none;
+      background:radial-gradient(circle, rgba(60,255,255,.18), transparent 70%);
+      opacity:0;
+      transition:opacity .5s;
+    }
+    .slot-glow.active { opacity:1; animation:glowPulse 1.6s ease-out; }
+
+    @keyframes glowPulse {
+      0% { opacity:.8; transform:scale(1); }
+      50% { opacity:1; transform:scale(1.15); }
+      100% { opacity:0; }
+    }
+
+    /* ———————————— Reels ———————————— */
+    .reel {
+      background:linear-gradient(180deg, #120b24 0%, #1c1235 100%);
+      border-radius:12px;
+      border:2px solid rgba(130,61,255,.35);
+      box-shadow:inset 0 0 10px rgba(130,61,255,.45);
+      display:flex; align-items:center; justify-content:center;
+      transition:transform .1s ease;
+    }
+
+    .symbol {
+      font-size:3rem;
+      text-shadow:0 0 15px var(--av-neon);
+    }
+
+    .reel.spin-blur {
+      filter:blur(6px) brightness(1.2);
+      animation:wobble .12s infinite alternate ease-in-out;
+    }
+
+    @keyframes wobble {
+      from { transform:translateY(1px); }
+      to   { transform:translateY(-1px); }
+    }
+
+    /* Win highlight */
+    .win-cell {
+      box-shadow:
+        0 0 0 2px rgba(60,255,255,.75) inset,
+        0 0 18px rgba(60,255,255,.55);
+      animation:winPulse .9s ease-in-out 2;
+    }
+
+    @keyframes winPulse {
+      0% { filter:brightness(1); }
+      50% { filter:brightness(1.25); }
+      100% { filter:brightness(1); }
+    }
+
+    /* ———————————— Buttons ———————————— */
+    .btn {
+      background:linear-gradient(135deg, #6120ff, #3b148e);
+      border:1px solid rgba(255,255,255,.12);
+      padding:12px 24px;
+      border-radius:14px;
+      font-weight:700;
+      text-transform:uppercase;
+      cursor:pointer;
+      box-shadow:0 4px 18px rgba(127,44,255,.4);
+      transition:.25s;
+    }
+    .btn:hover {
+      transform:translateY(-2px);
+      box-shadow:0 6px 25px rgba(90,35,255,.65);
+    }
+
+    .btn-spin {
+      background:linear-gradient(135deg, #3cf2ff, #37b7ff);
+      color:#09051a;
+      font-size:1.6rem;
+      padding:18px 48px;
+      font-weight:800;
+      box-shadow:0 0 35px rgba(60,255,255,.55);
+    }
+
+    .balance-display {
+      background:rgba(15,10,30,.75);
+      border:2px solid rgba(127,44,255,.45);
+      border-radius:14px;
+      padding:16px 20px;
+      text-align:center;
+      color:#c0a8ff;
+      font-weight:700;
+      box-shadow:0 0 20px rgba(127,44,255,.3);
+    }
+
+    .free-spins-badge {
+      background:linear-gradient(135deg,#7f2cff,#5926c9);
+      padding:8px 20px;
+      border-radius:999px;
+      font-weight:800;
+      box-shadow:0 0 22px rgba(127,44,255,.55);
+      animation:pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform:scale(1); opacity:.7; }
+      50% { transform:scale(1.05); opacity:1; }
+    }
+  </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen p-6">
+
+  <!-- Background Orbs -->
+  <div id="orb1" class="orb"></div>
+  <div id="orb2" class="orb"></div>
+  <div id="orb3" class="orb"></div>
+
+  <!-- Center main slot -->
+  <div class="w-full max-w-5xl relative z-10">
+    <div id="particles"></div>
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+
+      <!-- LEFT UI -->
+      <div class="flex flex-col gap-4 order-2 lg:order-1">
+        <div class="balance-display"><div class="text-sm opacity-70">Vault Balance</div><div id="balance" class="text-2xl">1000</div></div>
+        <div class="balance-display"><div class="text-sm opacity-70">Bet Amount</div><div id="currentBet" class="text-2xl">1</div></div>
+
+        <div id="freeSpinsDisplay" class="free-spins-badge hidden">
+          ⚡ Arcane Spins: <span id="freeSpinsCount">0</span>
+        </div>
+
+        <div id="winDisplay" class="balance-display hidden">
+          <div class="text-sm opacity-70">Win</div>
+          <div id="winAmount" class="text-2xl text-cyan-300">0</div>
+        </div>
+      </div>
+
+      <!-- SLOT -->
+      <div class="order-1 lg:order-2 relative">
+        <div class="slot-container p-6 relative">
+          <div id="slotGlow" class="slot-glow"></div>
+          <div id="slotMachine" class="grid grid-cols-3 gap-3"></div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="mt-6 flex flex-wrap justify-center gap-3">
+          <button id="decreaseBet" class="btn text-xl px-6">−</button>
+          <button id="spinBtn" class="btn btn-spin">SPIN</button>
+          <button id="increaseBet" class="btn text-xl px-6">+</button>
+          <button id="soundBtn" class="btn">🔊</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+/* SYMBOLS — replaced with ArcaneVault icons */
+const SYMBOLS = {
+  shard:   { emoji: "⟡", multiplier: 2, weight: 28 },
+  spark:   { emoji: "✦", multiplier: 5, weight: 25 },
+  moon:    { emoji: "☽", multiplier: 10, weight: 20 },
+  flame:   { emoji: "⚡", multiplier: 20, weight: 15 },
+  sigil:   { emoji: "⟠", multiplier: 50, weight: 8 },
+  scatter: { emoji: "⟁", multiplier: 0, weight: 3 }
+};
+    /* Background particles */
+    const container=document.getElementById('particles');
+    for(let i=0;i<120;i++){
+      const p=document.createElement('div');
+      p.className='particle';
+      p.style.left=Math.random()*100+'%';
+      p.style.top=Math.random()*100+'%';
+      p.style.animationDelay=(Math.random()*8)+'s';
+      p.style.background=`hsla(${180+Math.random()*180},80%,75%,.9)`;
+      container.appendChild(p);
+    }
+
+  
+    const PAYLINES=[
+      [[0,0],[0,1],[0,2]], [[1,0],[1,1],[1,2]], [[2,0],[2,1],[2,2]],
+      [[0,0],[1,1],[2,2]], [[2,0],[1,1],[0,2]]
+    ];
+    const BETS=[1,3,5,10,25,50];
+
+    let balance=1000, currentBetIndex=0, freeSpins=0, isSpinning=false, soundEnabled=true;
+    let reels=[[],[],[]]; // [col][row]
+    const audioContext=new(window.AudioContext||window.webkitAudioContext)();
+
+    function playSound(f,d,t='sine',gainVol=0.3){
+      if(!soundEnabled) return;
+      const o=audioContext.createOscillator(), g=audioContext.createGain();
+      o.connect(g); g.connect(audioContext.destination);
+      o.frequency.value=f; o.type=t;
+      g.gain.setValueAtTime(gainVol,audioContext.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01,audioContext.currentTime+d);
+      o.start(); o.stop(audioContext.currentTime+d);
+    }
+
+    function init(){
+      createReels(); updateDisplay();
+      document.getElementById('spinBtn').addEventListener('click',spin);
+      document.getElementById('increaseBet').addEventListener('click',()=>{ if(currentBetIndex<BETS.length-1){ currentBetIndex++; updateDisplay(); playSound(500,0.1);} });
+      document.getElementById('decreaseBet').addEventListener('click',()=>{ if(currentBetIndex>0){ currentBetIndex--; updateDisplay(); playSound(400,0.1);} });
+      document.getElementById('soundBtn').addEventListener('click',()=>{ soundEnabled=!soundEnabled; document.getElementById('soundBtn').textContent=soundEnabled?'🔊':'🔇'; playSound(600,0.1); });
+    }
+
+    function createReels(){
+      const slot=document.getElementById('slotMachine'); slot.innerHTML='';
+      for(let c=0;c<3;c++){
+        for(let r=0;r<3;r++){
+          const cell=document.createElement('div');
+          cell.className='reel aspect-square';
+          const s=document.createElement('div'); s.className='symbol';
+          s.textContent=getRandomSymbol();
+          cell.appendChild(s); slot.appendChild(cell);
+          if(!reels[c]) reels[c]=[];
+          reels[c][r]=s.textContent;
+        }
+      }
+    }
+
+    function getRandomSymbol(){
+      const total=Object.values(SYMBOLS).reduce((a,b)=>a+b.weight,0);
+      let r=Math.random()*total;
+      for(const sym of Object.values(SYMBOLS)){ r-=sym.weight; if(r<=0) return sym.emoji; }
+      return SYMBOLS.crystal.emoji;
+    }
+
+    async function spin(){
+      if(isSpinning) return;
+     
+      const glow=document.getElementById('slotGlow');
+      const bet=BETS[currentBetIndex];
+      if(freeSpins===0 && balance<bet){ alert('Not enough balance!'); return; }
+
+      isSpinning=true; document.getElementById('spinBtn').disabled=true;
+      document.getElementById('winDisplay').classList.add('hidden');
+      clearWinHighlights();
+
+   
+      glow.classList.remove('active');
+      playSound(250,0.35,'sawtooth');
+
+      if(freeSpins===0) balance-=bet; else freeSpins--;
+      updateDisplay();
+
+      await animateSpin();
+
+      const wins=checkWins();
+      const scatters=countScatters();
+
+     
+
+      if(scatters>=3){
+        
+        setTimeout(()=>alert('💫 3 Scatters! +5 Free Spins!'),400);
+      }
+      if(wins.totalWin>0){
+        glow.classList.add('active');
+        playWinSound();
+        balance+=wins.totalWin;
+        displayWin(wins);
+       
+        highlightWins(wins.cells);
+      
+      }
+
+      updateDisplay(); isSpinning=false; document.getElementById('spinBtn').disabled=false;
+    }
+
+    // NEW: визуальная прокрутка — быстрое обновление символов + blur столбца
+    async function animateSpin(){
+      const delays=[1000,1500,2000];
+      const columns = [0,1,2].map(c => Array.from(document.querySelectorAll('.reel')).slice(c*3, c*3+3));
+
+      const tasks = columns.map((colCells, idx) => new Promise(resolve => {
+        // включаем blur/вибрацию столбца
+        colCells.forEach(cell => cell.classList.add('spin-blur'));
+
+        // быстрый цикл смены символов
+        const tickMs = 60;                // частота смены
+        const duration = delays[idx];     // длительность столбца
+        let t=0;
+        const timer = setInterval(() => {
+          for(let r=0;r<3;r++){
+            const symEl = colCells[r].firstElementChild;
+            symEl.textContent = getRandomSymbol();
+          }
+        }, tickMs);
+
+        setTimeout(() => {
+          clearInterval(timer);
+          // финальные символы + запись в логику барабанов
+          for(let r=0;r<3;r++){
+            const symEl = colCells[r].firstElementChild;
+            const finalSym = getRandomSymbol();
+            symEl.textContent = finalSym;
+            reels[idx][r] = finalSym;
+          }
+          // убираем blur
+          colCells.forEach(cell => cell.classList.remove('spin-blur'));
+          playSound(320 + idx*120, 0.15);
+          resolve();
+        }, duration);
+      }));
+
+      await Promise.all(tasks);
+    }
+
+    function playWinSound(){
+      playSound(600,0.28,'sine',0.4);
+      playSound(900,0.24,'triangle',0.32);
+      playSound(1200,0.45,'sine',0.3);
+    }
+
+    function checkWins(){
+      let totalWin=0, count=0;
+      const winCells=[]; // массив координат ячеек-победителей [[r,c],...]
+      PAYLINES.forEach(line=>{
+        const syms=line.map(([r,c])=>reels[c][r]);
+        const f=syms[0];
+        if(f===SYMBOLS.scatter.emoji) return;
+        if(syms.every(s=>s===f)){
+          const d=Object.values(SYMBOLS).find(s=>s.emoji===f);
+          totalWin += d.multiplier * BETS[currentBetIndex];
+          count++;
+          winCells.push(...line);
+        }
+      });
+      return {totalWin, winCount:count, cells:winCells};
+    }
+
+    function highlightWins(cells){
+      if(!cells || !cells.length) return;
+      cells.forEach(([r,c])=>{
+        const idx = c*3 + r; // порядок отрисовки: колонки по 3 элемента
+        const cell = document.querySelectorAll('.reel')[idx];
+        if(cell) cell.classList.add('win-cell');
+      });
+      setTimeout(clearWinHighlights, 1200);
+    }
+
+    function clearWinHighlights(){
+      document.querySelectorAll('.reel.win-cell').forEach(el=>el.classList.remove('win-cell'));
+    }
+
+    function countScatters(){
+      let c=0; reels.forEach(col=>col.forEach(sym=>{ if(sym===SYMBOLS.scatter.emoji) c++; }));
+      return c;
+    }
+
+    function displayWin(r){
+      document.getElementById('winAmount').textContent=r.totalWin;
+      document.getElementById('winDisplay').classList.remove('hidden');
+    }
+
+  
+
+    function updateDisplay(){
+      document.getElementById('balance').textContent=balance;
+      document.getElementById('currentBet').textContent=BETS[currentBetIndex];
+      const fs=document.getElementById('freeSpinsDisplay');
+      if(freeSpins>0){ fs.classList.remove('hidden'); document.getElementById('freeSpinsCount').textContent=freeSpins; }
+      else fs.classList.add('hidden');
+    }
+
+    init();
+  </script>
+</body>
+</html>

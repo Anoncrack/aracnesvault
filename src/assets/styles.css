@@ -1,0 +1,377 @@
+@import "tailwindcss";
+
+
+/* COLRS */
+@theme {
+  /* ---- Backgrounds (Deep Arcane Metal) ---- */
+  --color-bg: #0E1220;
+  --color-bg-dark: #171F30;
+  --color-surface: #223047;
+  --color-surface-alt: #2F3D55;
+
+
+  --color-gold: #D7A84E;
+  --color-gold-dark: #B88A37;
+  --color-gold-bronze: #8E6B2C;
+  --color-gold-soft: #E1C78A;
+
+
+  --color-rune: #00C9BA;
+  --color-rune-dark: #2BA39A;
+  --color-rune-light: #5BC5C8;
+  --color-rune-soft: #8FE5E2;
+
+
+  --color-fire: #F6A53A;
+  --color-fire-light: #FFCC73;
+  --color-fire-dark: #D9822A;
+
+
+  --color-t: #F2F3F5;
+  --color-t-soft: #D9DBE0;
+}
+
+.nav-link {
+  @apply  font-light text-[17px] transition-colors duration-300;
+  }
+  .nav-link:hover {
+  color: var(--color-gold);
+  text-shadow: 0 0 6px var(--color-gold-soft);
+  }
+  
+  .mobile-link {
+  @apply  hover:text-gold transition;
+  }
+
+/* ================================
+   ARCANE VAULT TYPOGRAPHY SYSTEM
+   ================================ */
+
+/* Заголовки — Cinzel */
+h1, h2, h3 {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+
+}
+
+/* Дополнительные характеристики */
+h1 {
+  line-height: 1.1;
+}
+h2 {
+  line-height: 1.2;
+}
+h3 {
+  line-height: 1.25;
+}
+
+/* Основной текст — Montserrat */
+p,
+li,
+small,
+blockquote,
+label,
+input,
+button {
+  font-family: 'Montserrat', sans-serif;
+
+}
+
+/* Более мягкий стиль для p */
+p {
+  line-height: 1.65;
+  font-size: 1rem;
+}
+
+/* Дисклеймеры и мелкие тексты */
+small {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+
+
+
+
+@font-face {
+    font-family: 'Cinzel';
+    src: url('/fonts/Cinzel.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Montserrat';
+    src: url('/fonts/Montserrat.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+  }
+
+
+  .text-rune-gold { color: #FFD700; } /* Gold accent color */
+    .bg-rune-dark { background-color: #1a1a2e; } /* Dark navy/purple background */
+    .bg-rune-accent { background-color: #7C3AED; } /* Purple accent */
+
+    .scrolled-button {
+      background-color: #FFD700;
+      color: #1a1a2e !important;
+    }
+    .scrolled-button:hover {
+      background-color: #eeb8ff !important;
+      color: #1a1a2e !important;
+    }
+
+
+/* 2. Общие стили и тени */
+.hero-runes-section {
+    min-height: 100vh; /* Используем min-h-screen для полной высоты экрана */
+}
+.text-shadow-heavy {
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 199, 44, 0.3);
+}
+.shadow-deep-glow {
+    box-shadow: 0 0 30px rgba(161, 110, 233, 0.7);
+    transition: box-shadow 0.5s ease-in-out;
+}
+.shadow-deep-glow:hover {
+    box-shadow: 0 0 50px rgba(161, 110, 233, 1), 0 0 70px rgba(255, 199, 44, 0.5);
+}
+
+/* 3. Анимации текста и элементов (Переименованы) */
+.anim-slide-up-slow {
+    opacity: 0;
+    transform: translateY(40px);
+    animation: slideUpSlow 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+}
+.delay-text-200 { animation-delay: 0.2s; }
+.delay-text-400 { animation-delay: 0.4s; }
+.delay-text-600 { animation-delay: 0.6s; }
+.delay-text-700 { animation-delay: 0.7s; }
+
+@keyframes slideUpSlow {
+    0% { opacity: 0; transform: translateY(40px); }
+    100% { opacity: 1; transform: translateY(0); }
+}
+
+/* 4. Анимации фонового свечения (pulse-glow-overlay) */
+.pulse-glow-overlay {
+    animation: subtlePulse 15s infinite alternate;
+}
+@keyframes subtlePulse {
+    0% { opacity: 0.9; transform: scale(1); }
+    100% { opacity: 0.95; transform: scale(1.03); }
+}
+
+/* 5. Уникальные стили кнопок с анимацией свечения */
+.btn-gold-glow {
+    display: inline-block;
+    background-color: #FFC72C;
+    color: #1a071f;
+    font-weight: bold;
+    padding: 0.75rem 2rem;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 10px rgba(255, 199, 44, 0.5);
+    border: 2px solid transparent;
+}
+.btn-gold-glow:hover {
+    background-color: #FFD770;
+    box-shadow: 0 0 25px rgba(255, 199, 44, 0.9), 0 0 5px rgba(0, 0, 0, 0.3);
+    transform: translateY(-3px) scale(1.05);
+}
+
+.btn-purple-glow {
+    display: inline-block;
+    background-color: #ffffff16;
+    font-weight: bold;
+    padding: 0.75rem 2rem;
+    border: 2px solid #ffffff;
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 0 10px rgba(161, 110, 233, 0.4);
+}
+.btn-purple-glow:hover {
+    background-color: #A16EE9;
+    color: white;
+    box-shadow: 0 0 25px rgba(161, 110, 233, 0.9);
+    transform: translateY(-3px) scale(1.05);
+}
+
+/* Анимация нажатия (3D-эффект) */
+.btn-press:active {
+    transform: translateY(1px) scale(0.98) !important;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 6. Анимации изображения */
+.anim-scale-rotate {
+    animation: scaleRotate 10s linear infinite;
+    /* Улучшенная анимация пульсации и вращения контейнера */
+}
+@keyframes scaleRotate {
+    0% { transform: scale(1) rotate(0deg); opacity: 1; }
+    50% { transform: scale(1.03) rotate(1deg); opacity: 0.95; }
+    100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.anim-float-breathe {
+    /* Более выраженная анимация "дыхания" и парения иконки */
+    animation: floatBreathe 5s ease-in-out infinite;
+}
+@keyframes floatBreathe {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-20px) rotate(2deg); }
+}
+.animate-fade-in-up {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s ease-out forwards;
+  }
+  .animate-fade-in-up.delay-200 { animation-delay: 0.2s; }
+  .animate-fade-in-up.delay-400 { animation-delay: 0.4s; }
+  .animate-fade-in-up.delay-600 { animation-delay: 0.6s; } /* Added delay */
+  .animate-fade-in-up.delay-700 { animation-delay: 0.7s; }
+  
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-scale-pulse {
+    animation: scalePulse 6s ease-in-out infinite;
+  }
+  
+  @keyframes scalePulse {
+    0%, 100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.05);
+      opacity: 0.85;
+    }
+  }
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+  }
+  
+  .fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.slide-in-bottom {
+  opacity: 0;
+  transform: translateY(50px);
+  transition: opacity 1.2s cubic-bezier(0.3, 0.6, 0.4, 1), transform 1.2s cubic-bezier(0.3, 0.6, 0.4, 1);
+}
+.slide-in-bottom.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.delay-200 { transition-delay: 0.2s; }
+.delay-300 { transition-delay: 0.3s; }
+.delay-500 { transition-delay: 0.5s; }
+.delay-700 { transition-delay: 0.7s; }
+.delay-900 { transition-delay: 0.9s; }
+
+.bg-clip-text {
+  background-clip: text;
+  -webkit-background-clip: text;
+}
+
+.bg-pattern-rune {
+    /* ЗАМЕНИТЕ ПУТЬ на ваш файл паттерна */
+    background-image: url('/assets/rune-pattern.svg'); 
+    background-repeat: repeat;
+    background-blend-mode: overlay; /* Наложение паттерна на основной цвет */ /* Основной темный цвет */
+    opacity: 1;
+}
+
+/* 2. Стиль для контейнера аватара */
+.user-avatar-container {
+    width: 90px;
+    height: 90px;
+    margin: -60px auto 20px auto; /* Поднятие над карточкой */
+    border-radius: 50%;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 5px solid #FFC72C; /* Золотой ободок */
+    box-shadow: 0 0 15px rgba(255, 199, 44, 0.7), 0 0 25px rgba(161, 110, 233, 0.5);
+    background-color: #1a1a2e; /* Темный фон, если изображение не загрузится */
+}
+
+/* 3. Стиль для самого изображения аватара */
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* 4. Небольшая корректировка для 3D-эффекта карточки */
+.testimonial-card {
+    /* Добавление тени снизу для "парящего" эффекта */
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.testimonial-slide {
+    transition: transform 0.5s, filter 0.5s;
+  }
+  .testimonial-slide.inactive {
+    filter: brightness(0.7);
+    transform: scale(0.9);
+  }
+  .testimonial-slide.active {
+    filter: brightness(1);
+    transform: scale(1);
+  }
+
+  #olympus-game-modal iframe {
+  pointer-events: auto;
+}
+
+#close-game-button {
+  position: absolute;
+  z-index: 9999999;
+  pointer-events: auto;
+}
+
+#olympus-game-modal.active iframe {
+  pointer-events: none;
+}
+
+#close-game-button {
+  z-index: 9999999 !important;
+  pointer-events: auto !important;
+}
+
+#game-iframe {
+  pointer-events: none;
+}
+
+#olympus-game-modal.show-iframe #game-iframe {
+  pointer-events: auto;
+}

@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" 
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>ArcaneVault — Mystic Grid</title>
+  <link rel="icon" href="/assets/logo.webp" />
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --bg1:#0a0514;
+      --bg2:#110a26;
+      --glass:rgba(255,255,255,.06);
+      --frame:rgba(255,255,255,.12);
+
+      --purple:#8b5cf6;
+      --purple-glow:rgba(139,92,246,.55);
+      --cyan:#3cf2ff;
+      --cyan-glow:rgba(60,242,255,.55);
+      --gold:#ffd465;
+
+      --w:1280px;
+      --h:720px;
+    }
+
+    body {
+      margin:0;
+      overflow:hidden;
+      background:
+        radial-gradient(1100px 600px at 50% 10%, rgba(139,92,246,.20), transparent 70%),
+        radial-gradient(900px 500px at 80% 70%, rgba(60,242,255,.15), transparent 75%),
+        linear-gradient(180deg, var(--bg1), var(--bg2));
+      font-family:Inter, sans-serif;
+      color:#fff;
+      touch-action:none;
+    }
+
+    /* Scene wrapper */
+    #stage {
+      position:absolute;
+      width:var(--w);
+      height:var(--h);
+      left:50%;
+      top:50%;
+      transform:translate(-50%,-50%) scale(1);
+      transform-origin:center center;
+      background:#0a0716;
+      border-radius:22px;
+      box-shadow:
+        0 30px 70px rgba(0,0,0,.55),
+        inset 0 0 0 1px rgba(255,255,255,.04);
+      overflow:hidden;
+      isolation:isolate;
+    }
+
+    /* Aurora FX */
+    .aurora {
+      position:absolute;
+      inset:0;
+      background:
+        radial-gradient(900px 600px at 20% 15%, rgba(60,242,255,.15), transparent 60%),
+        radial-gradient(900px 600px at 80% 80%, rgba(139,92,246,.16), transparent 60%),
+        linear-gradient(180deg, #0c0820, #120a28);
+      pointer-events:none;
+    }
+
+    /* Glass Card */
+    .glass {
+      background:linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.015));
+      border:1px solid var(--frame);
+      border-radius:14px;
+      backdrop-filter:blur(12px) saturate(130%);
+      box-shadow:
+        0 10px 30px rgba(0,0,0,.4),
+        inset 0 0 0 1px rgba(255,255,255,.05);
+    }
+
+    /* Grid cells */
+    .cell {
+      background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.015));
+      border-radius:12px;
+      border:1px solid rgba(139,92,246,.35);
+      aspect-ratio:1/1;
+      display:flex; justify-content:center; align-items:center;
+      box-shadow:
+        inset 0 0 18px rgba(139,92,246,.25),
+        inset 0 0 0 1px rgba(255,255,255,.04);
+      transition:.2s ease;
+    }
+
+    .cell:hover {
+      transform:translateY(-3px);
+      box-shadow:
+        inset 0 0 30px rgba(139,92,246,.35),
+        0 0 20px rgba(60,242,255,.45);
+    }
+
+    
+    .symbol {
+      font-size:2.4rem;
+      transition:.18s ease;
+      filter:
+        drop-shadow(0 0 8px rgba(139,92,246,.5))
+        drop-shadow(0 0 12px rgba(60,242,255,.4));
+    }
+
+    .symbol.wild {
+      animation:wildPulse 1.3s ease-in-out infinite;
+    }
+    @keyframes wildPulse {
+      0%,100% { transform:scale(1); filter:drop-shadow(0 0 16px #ffd465); }
+      50%     { transform:scale(1.18); filter:drop-shadow(0 0 26px #ffe38a); }
+    }
+
+    .win-cell {
+      animation:winPulse .9s ease-in-out infinite;
+    }
+    @keyframes winPulse {
+      0%,100% {
+        background:rgba(255,210,75,.25);
+        box-shadow:
+          inset 0 0 0 1px rgba(255,210,75,.9),
+          0 0 22px rgba(255,210,75,.9);
+      }
+      50% {
+        background:rgba(255,210,75,.35);
+        box-shadow:
+          inset 0 0 0 1px rgba(255,210,75,1),
+          0 0 28px rgba(255,210,75,1);
+      }
+    }
+
+    #slotMachine {
+  position: relative;
+}
+    .win-line {
+  position:absolute;            /* <— главное */
+  height:4px;
+  background:linear-gradient(90deg, transparent, #ffd465, transparent);
+  box-shadow:0 0 16px #ffd465;
+  animation:linePulse .6s infinite ease-in-out;
+  pointer-events:none;
+}
+    @keyframes linePulse {
+      0%,100% {opacity:.75}
+      50% {opacity:1}
+    }
+
+    .btn {
+      background:linear-gradient(140deg, rgba(139,92,246,.3), rgba(60,242,255,.25));
+      border:1px solid rgba(139,92,246,.4);
+      padding:.7rem 1rem;
+      border-radius:12px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.03em;
+      transition:.2s;
+      box-shadow:0 5px 20px rgba(139,92,246,.35);
+    }
+
+    .btn:hover {
+      transform:translateY(-2px);
+      box-shadow:0 12px 30px rgba(139,92,246,.55);
+    }
+
+    .btn-spin {
+      background:linear-gradient(145deg, #ffe38a, #ffb200);
+      border:1px solid rgba(255,255,255,.25);
+      color:#251800;
+      font-size:1.15rem;
+      box-shadow:0 0 28px rgba(255,210,90,.5);
+      animation:spinGlow 2s ease-in-out infinite;
+    }
+    @keyframes spinGlow {
+      0%,100% { box-shadow:0 0 25px rgba(255,210,75,.5); }
+      50%     { box-shadow:0 0 40px rgba(255,210,75,.85); }
+    }
+
+    .hudTitle {
+      opacity:.75;
+      font-size:.8rem;
+      text-transform:uppercase;
+    }
+    .hudValue {
+      font-size:1.2rem;
+      font-weight:700;
+      text-shadow:0 0 10px rgba(139,92,246,.45);
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="stage">
+  <div class="aurora"></div>
+
+  <!-- LAYOUT MAIN GRID -->
+  <div class="w-full h-full p-4 grid grid-cols-[1fr_1.6fr_1fr] gap-4 relative z-10">
+
+    <!-- LEFT PANEL -->
+    <div class="flex flex-col gap-4">
+      <div id="freeSpinsDisplay" class="glass p-4 hidden text-center">
+        <div class="hudTitle">Free Spins</div>
+        <div id="freeSpinsCount" class="hudValue text-2xl">0</div>
+      </div>
+
+      <div id="multiplierDisplay" class="glass p-4 hidden text-center">
+        <div class="hudTitle">Multiplier</div>
+        <div id="currentMultiplier" class="hudValue text-xl">×1</div>
+      </div>
+
+      <button id="paytableBtn" class="btn">Paytable</button>
+      <button id="historyBtn" class="btn">History</button>
+      <button id="achievementsBtn" class="btn">Achievements</button>
+
+      <div class="glass p-4 text-center">
+        <div class="hudTitle">Zoom</div>
+        <div class="flex justify-center gap-2 mt-2">
+          <button id="zoomOutBtn" class="btn px-3 py-1">–</button>
+          <button id="zoomInBtn" class="btn px-3 py-1">+</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CENTER AREA -->
+    <div class="grid grid-rows-[auto_1fr_auto] gap-4">
+
+      <!-- COMBO PANEL -->
+      <div class="glass p-4">
+        <div class="h-4 rounded-full bg-[#1a152a] border border-white/10 overflow-hidden">
+          <div id="comboFill"
+               class="h-full w-0 bg-gradient-to-r from-cyan-400 to-yellow-300"
+               style="box-shadow:0 0 12px rgba(60,242,255,.6)">
+          </div>
+        </div>
+        <div class="hudTitle text-center mt-2">
+          Combo: <span id="comboText">0</span> / 10
+        </div>
+      </div>
+
+      <!-- SLOT MACHINE -->
+      <div class="glass p-4 relative overflow-hidden">
+        <div id="slotMachine" 
+             class="grid gap-2"
+             style="grid-template-columns:repeat(6,1fr);">
+        </div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div class="flex flex-wrap gap-3 justify-center">
+        <button id="decreaseBet" class="btn">–</button>
+        <button id="maxBet" class="btn">MAX</button>
+        <button id="spinBtn" class="btn btn-spin">SPIN</button>
+        <button id="autoSpinBtn" class="btn">AUTO</button>
+        <button id="increaseBet" class="btn">+</button>
+        <button id="soundBtn" class="btn">🔊</button>
+      </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="flex flex-col gap-4">
+
+      <!-- CHARACTER / LOGO -->
+      <div class="glass p-4 flex items-center justify-center min-h-[220px]">
+        <img src="logo.webp" id="characterImg"
+             class="w-full rounded-xl" alt="">
+      </div>
+
+      <!-- HUD STATS -->
+      <div class="glass p-4">
+        <div class="grid grid-cols-4 gap-2 text-center">
+          <div class="glass p-2">
+            <div class="hudTitle">Balance</div>
+            <div id="balance" class="hudValue">1000</div>
+          </div>
+          <div class="glass p-2">
+            <div class="hudTitle">Bet</div>
+            <div id="currentBet" class="hudValue">1</div>
+          </div>
+          <div class="glass p-2">
+            <div class="hudTitle">Win</div>
+            <div id="totalWin" class="hudValue text-green-300">0</div>
+          </div>
+          <div class="glass p-2">
+            <div class="hudTitle">Combo</div>
+            <div id="comboCount" class="hudValue text-yellow-300">×1</div>
+          </div>
+        </div>
+
+        <div class="mt-6"></div>
+
+        <div class="grid grid-cols-2 gap-2 text-sm">
+          <div>Spins</div> <div id="totalSpins" class="text-right">0</div>
+          <div>Wins</div>  <div id="totalWins" class="text-right">0</div>
+          <div>Best</div>  <div id="biggestWin" class="text-right">0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="achievementsArea"
+       class="absolute right-4 top-4 flex flex-col gap-3 z-50"></div>
+
+</div>
+
+
+  <script>
+
+    const BASE_W = 1280, BASE_H = 720;
+    const stage = document.getElementById('stage');
+
+    function fit() {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const scaleBase = Math.min(vw / BASE_W, vh / BASE_H);
+  const scale = scaleBase * zoom; 
+
+  stage.style.position = 'absolute';
+  stage.style.left = '50%';
+  stage.style.top = '50%';
+  stage.style.transformOrigin = 'center center';
+  stage.style.transform = `translate(-50%, -50%) scale(${scale})`;
+}
+let zoom = 1.0;
+
+document.getElementById('zoomInBtn').addEventListener('click', () => {
+  zoom = Math.min(zoom + 0.05, 1.5);
+  fit();
+});
+
+document.getElementById('zoomOutBtn').addEventListener('click', () => {
+  zoom = Math.max(zoom - 0.05, 0.5);
+  fit();
+});
+
+
+
+    addEventListener('resize', fit, {passive:true});
+    addEventListener('orientationchange', () => setTimeout(fit, 50), {passive:true});
+    document.addEventListener('gesturestart', e => e.preventDefault()); 
+    document.addEventListener('touchmove', e => { if(e.scale && e.scale !== 1) e.preventDefault(); }, {passive:false});
+    fit();
+
+
+    const SYMBOLS = {
+  shard:   { emoji:'⟡', name:'Shard', multiplier:2, weight:28 },
+  spark:   { emoji:'✦', name:'Spark', multiplier:3, weight:25 },
+  moon:    { emoji:'☽', name:'Moon Sigil', multiplier:5, weight:20 },
+  glyph:   { emoji:'⟁', name:'Glyph', multiplier:8, weight:15 },
+  orb:     { emoji:'⧖', name:'Arcane Orb', multiplier:12, weight:12 },
+  rune:    { emoji:'ᚠ', name:'Rune', multiplier:20, weight:8 },
+  ultra:   { emoji:'⚚', name:'Astral Mark', multiplier:50, weight:4 },
+  crown:   { emoji:'⌖', name:'Royal Mark', multiplier:100, weight:2 },
+  mega:    { emoji:'⚷', name:'Mythic', multiplier:180, weight:1 },
+  scatter: { emoji:'🜁', name:'Scatter', multiplier:0, weight:3 },
+  wild:    { emoji:'✨', name:'Wild', multiplier:0, weight:3 }
+};
+
+
+    const BETS = [1,3,5,10,25,50,100,250,500];
+    const GRID_SIZE = 6;
+
+    let gameState = {
+      balance: 1000,
+      currentBetIndex: 0,
+      freeSpins: 0,
+      isSpinning: false,
+      soundEnabled: true,
+      autoSpin: false,
+      reels: [],
+      combo: 0,
+      multiplier: 1,
+      totalSpins: 0,
+      totalWinsCount: 0,
+      biggestWin: 0,
+      history: [],
+      achievements: {
+        firstWin:false, bigWin:false, megaWin:false, scatter5:false, combo10:false, lucky777:false
+      }
+    };
+
+
+    const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+    function playSound(freq, dur, type='sine', vol=.3){
+      if(!gameState.soundEnabled) return;
+      const osc = audioContext.createOscillator();
+      const gain = audioContext.createGain();
+      osc.connect(gain); gain.connect(audioContext.destination);
+      osc.frequency.value = freq; osc.type = type;
+      gain.gain.setValueAtTime(vol, audioContext.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + dur);
+      osc.start(); osc.stop(audioContext.currentTime + dur);
+    }
+    function playWinSound(win){
+      const bet = BETS[gameState.currentBetIndex];
+      const m = win / bet;
+      if(m>=50){ for(let i=0;i<5;i++) setTimeout(()=>playSound(800+i*100,.3,'square',.4), i*100) }
+      else if(m>=20){ playSound(600,.3,'triangle',.3); setTimeout(()=>playSound(800,.3,'triangle',.3),150) }
+      else{ playSound(500,.2,'sine',.22) }
+    }
+
+
+    function init(){
+      createGrid();
+      updateDisplay();
+      bindUI();
+    }
+
+    function createGrid(){
+      const root = document.getElementById('slotMachine');
+      root.innerHTML = '';
+      gameState.reels = [];
+      for(let c=0;c<GRID_SIZE;c++){
+        gameState.reels[c] = [];
+        for(let r=0;r<GRID_SIZE;r++){
+          const cell = document.createElement('div');
+          cell.className = 'cell';
+          cell.id = `cell-${r}-${c}`;
+          const sym = document.createElement('div');
+          sym.className = 'symbol';
+          const s = pickSymbol();
+          sym.textContent = s;
+          if(s===SYMBOLS.wild.emoji) sym.classList.add('wild');
+          cell.appendChild(sym);
+          root.appendChild(cell);
+          gameState.reels[c][r] = s;
+        }
+      }
+    }
+
+    function pickSymbol(){
+  const list = Object.values(SYMBOLS);
+  const total = list.reduce((a,s)=>a+s.weight,0);
+  let rnd = Math.random()*total;
+  for(const s of list){
+    rnd -= s.weight;
+    if(rnd<=0) return s.emoji;
+  }
+  return list[0].emoji; // безопасный fallback
+}
+
+    function $(id){ return document.getElementById(id) }
+    function bindUI(){
+      $('spinBtn').addEventListener('click', spin);
+      $('increaseBet').addEventListener('click', ()=>{ if(gameState.currentBetIndex<BETS.length-1){ gameState.currentBetIndex++; updateDisplay(); playSound(520,.08) }});
+      $('decreaseBet').addEventListener('click', ()=>{ if(gameState.currentBetIndex>0){ gameState.currentBetIndex--; updateDisplay(); playSound(420,.08) }});
+      $('maxBet').addEventListener('click', ()=>{ gameState.currentBetIndex=BETS.length-1; updateDisplay(); playSound(640,.12) });
+      $('soundBtn').addEventListener('click', ()=>{ gameState.soundEnabled=!gameState.soundEnabled; $('soundBtn').textContent = gameState.soundEnabled?'🔊':'🔇'; playSound(600,.08) });
+      $('autoSpinBtn').addEventListener('click', toggleAutoSpin);
+      $('paytableBtn').addEventListener('click', showPaytable);
+      $('historyBtn').addEventListener('click', showHistory);
+      $('achievementsBtn').addEventListener('click', showAchievements);
+    }
+
+    async function toggleAutoSpin(){
+      gameState.autoSpin = !gameState.autoSpin;
+      if(gameState.autoSpin && !gameState.isSpinning){
+        while(gameState.autoSpin && gameState.balance >= BETS[gameState.currentBetIndex]){
+          await spin(); await new Promise(r=>setTimeout(r, 750));
+        }
+        gameState.autoSpin = false;
+      }
+    }
+
+
+    async function spin(){
+      if(gameState.isSpinning) return;
+      const bet = BETS[gameState.currentBetIndex];
+
+      if(gameState.freeSpins === 0 && gameState.balance < bet){
+        showModal('Not enough coins', 'This is a free-to-play demo. All coins are virtual.');
+        gameState.autoSpin = false; return;
+      }
+
+      gameState.isSpinning = true;
+      gameState.totalSpins++;
+      $('spinBtn').disabled = true;
+
+      clearHighlights();
+
+      if(gameState.freeSpins===0) gameState.balance -= bet;
+      else gameState.freeSpins--;
+
+      updateDisplay();
+
+      playSound(220,.35,'sawtooth',.2);
+      await animateSpin();
+
+      const results = checkAllWins();
+      const scatterCount = countSymbol(SYMBOLS.scatter.emoji);
+
+      if(scatterCount>=3){
+        const bonus = scatterCount + 2;
+        gameState.freeSpins += bonus;
+        playSound(820,.4,'square',.4);
+        setTimeout(()=> showModal(`${scatterCount} SCATTERS!`, `+${bonus} Free Spins`), 250);
+        if(scatterCount>=5) unlock('scatter5');
+      }
+
+      if(results.totalWin>0){
+        gameState.combo++;
+        gameState.multiplier = Math.min(1 + gameState.combo*0.5, 10);
+        const finalWin = Math.floor(results.totalWin * gameState.multiplier);
+        gameState.balance += finalWin;
+        gameState.totalWinsCount++;
+        if(finalWin>gameState.biggestWin) gameState.biggestWin = finalWin;
+
+        gameState.history.unshift({bet, win:finalWin, m:gameState.multiplier, combo:gameState.combo});
+        if(gameState.history.length>20) gameState.history.pop();
+
+        $('totalWin').textContent = finalWin;
+        playWinSound(finalWin);
+
+        if(finalWin>=bet*20) unlock('bigWin');
+        if(finalWin>=bet*100) unlock('megaWin');
+        if(gameState.combo>=10) unlock('combo10');
+      }else{
+        gameState.combo=0; gameState.multiplier=1;
+      }
+
+      updateDisplay();
+      gameState.isSpinning = false;
+      $('spinBtn').disabled = false;
+    }
+
+    async function animateSpin(){
+  const promises = [];
+
+  for(let c=0;c<GRID_SIZE;c++){
+    promises.push(new Promise(resolve => {
+
+      // 1. Собираем ВСЕ клетки колонки
+      const cells = [];
+      for(let r=0;r<GRID_SIZE;r++){
+        const el = document.getElementById(`cell-${r}-${c}`);
+        cells.push(el);
+        el.classList.add('spinning');
+      }
+
+      // 2. Обновляем символы после задержки
+      setTimeout(()=>{
+        cells.forEach((el, r) => {
+
+          el.classList.remove('spinning', 'wild');
+
+          const s = pickSymbol();
+          
+          // Обновляем символ внутри .symbol
+          const sym = el.querySelector('.symbol');
+          sym.textContent = s;
+          sym.classList.remove('wild');
+
+          gameState.reels[c][r] = s;
+
+          if(s === SYMBOLS.wild.emoji){
+            sym.classList.add('wild');
+          }
+        });
+
+        playSound(320 + c*50, .18, 'sine', .16);
+        resolve();
+
+      }, 650 + c*140);
+
+    }));
+  }
+
+  await Promise.all(promises);
+}
+
+    function checkAllWins(){
+      const wins=[]; let totalWin=0;
+
+      // rows
+      for(let r=0;r<GRID_SIZE;r++){
+        const line=[]; for(let c=0;c<GRID_SIZE;c++) line.push([r,c]);
+        const res = evalLine(line); if(res.win>0){ wins.push(res); totalWin+=res.win; }
+      }
+      // cols
+      for(let c=0;c<GRID_SIZE;c++){
+        const line=[]; for(let r=0;r<GRID_SIZE;r++) line.push([r,c]);
+        const res = evalLine(line); if(res.win>0){ wins.push(res); totalWin+=res.win; }
+      }
+      // diags
+      const d1=[], d2=[];
+      for(let i=0;i<GRID_SIZE;i++){ d1.push([i,i]); d2.push([i,GRID_SIZE-1-i]); }
+      const r1=evalLine(d1); if(r1.win>0){ wins.push(r1); totalWin+=r1.win; }
+      const r2=evalLine(d2); if(r2.win>0){ wins.push(r2); totalWin+=r2.win; }
+
+      return {wins, totalWin, winCount:wins.length};
+    }
+
+    function evalLine(line){
+  const syms=line.map(([r,c])=>gameState.reels[c][r]);
+  const cnt={}; let wilds=0;
+
+  syms.forEach(s=>{
+    if(s===SYMBOLS.wild.emoji) wilds++;
+    else if(s!==SYMBOLS.scatter.emoji) cnt[s]=(cnt[s]||0)+1;
+  });
+
+  let max=0, key=null;
+  for(const [s, n] of Object.entries(cnt)){
+    const t = n + wilds;
+    if(t>=3 && t>max){ max=t; key=s; }
+  }
+
+  // 🟣 ВАЖНО:
+  if(!key) return { win:0 };
+
+  const symMeta = Object.values(SYMBOLS).find(x => x.emoji === key);
+
+  // 🟣 ВАЖНО:
+  if(!symMeta) return { win:0 };
+
+  const bet = BETS[gameState.currentBetIndex];
+  const mBonus = max>=6 ? 2 : max>=5 ? 1.5 : 1;
+  const win = Math.floor(symMeta.multiplier * bet * mBonus);
+
+  highlight(line);
+
+  return {line, symbol:symMeta, count:max, win};
+}
+
+    
+
+    function countSymbol(target){
+      let k=0; for(const col of gameState.reels){ for(const s of col){ if(s===target) k++; } } return k;
+    }
+
+    function highlight(line){
+      line.forEach(([r,c])=> document.getElementById(`cell-${r}-${c}`).classList.add('win-cell'));
+      if(line.length>=2){
+        const first = document.getElementById(`cell-${line[0][0]}-${line[0][1]}`);
+        const last  = document.getElementById(`cell-${line[line.length-1][0]}-${line[line.length-1][1]}`);
+        const board = document.getElementById('slotMachine').getBoundingClientRect();
+        const a = first.getBoundingClientRect(), b = last.getBoundingClientRect();
+        const x1 = a.left + a.width/2 - board.left;
+        const y1 = a.top  + a.height/2 - board.top;
+        const x2 = b.left + b.width/2 - board.left;
+        const y2 = b.top  + b.height/2 - board.top;
+        const len = Math.hypot(x2-x1, y2-y1);
+        const ang = Math.atan2(y2-y1, x2-x1)*180/Math.PI;
+        const div = document.createElement('div');
+        div.className='win-line';
+        div.style.width = `${len}px`;
+        div.style.left = `${x1}px`;
+        div.style.top  = `${y1}px`;
+        div.style.transform = `rotate(${ang}deg)`;
+        div.style.transformOrigin = '0 50%';
+        document.getElementById('slotMachine').appendChild(div);
+      }
+    }
+    function clearHighlights(){
+      document.querySelectorAll('.win-cell').forEach(n=>n.classList.remove('win-cell'));
+      document.querySelectorAll('.win-line').forEach(n=>n.remove());
+    }
+
+
+    function showModal(title, message){
+      const wrap = document.createElement('div');
+      wrap.style.cssText = `
+        position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:50;
+        background:rgba(0,0,0,.65); animation: fadeIn .2s ease;
+      `;
+      wrap.innerHTML = `
+        <div class="glass" style="max-width:500px; width:90%; padding:22px; text-align:center; border-radius:18px;">
+          <div style="font-size:2rem; margin-bottom:8px">✨</div>
+          <div class="info" style="font-size:1.4rem; margin-bottom:6px">${title}</div>
+          <div style="opacity:.9; line-height:1.5">${message}</div>
+          <button class="btn btn-spin" style="margin-top:14px">OK</button>
+        </div>
+      `;
+      wrap.querySelector('button').addEventListener('click',()=>wrap.remove());
+      stage.appendChild(wrap);
+    }
+
+    function showPaytable(){
+      const list = Object.values(SYMBOLS).filter(s => s.emoji!==SYMBOLS.scatter.emoji && s.emoji!==SYMBOLS.wild.emoji);
+      const grid = list.map(s => `
+        <div class="glass" style="padding:10px; text-align:center">
+          <div style="font-size:1.8rem">${s.emoji}</div>
+          <div class="subtle" style="margin-top:4px">${s.name}</div>
+          <div class="info" style="color:#ffe38a">x${s.multiplier}</div>
+        </div>
+      `).join('');
+      modalWrap(`
+        <div class="info" style="text-align:center; font-size:1.4rem; margin-bottom:10px">Paytable</div>
+        <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:8px">${grid}</div>
+        <div style="margin-top:12px; opacity:.9">
+          <div>✨ <b>Wild</b> substitutes all symbols</div>
+          <div>🜁 <b>Scatter</b> 3+ grants Free Spins</div>
+          <div style="color:#ffe38a">Combo increases multiplier up to ×10</div>
+        </div>
+      `);
+    }
+    function showHistory(){
+      let body = '';
+      if(gameState.history.length===0){
+        body = `<div style="text-align:center; opacity:.9">No spins yet</div>`;
+      }else{
+        body = gameState.history.map((h,i)=>`
+          <div class="glass" style="padding:10px; display:flex; justify-content:space-between;">
+            <div>Spin #${gameState.totalSpins - i}</div>
+            <div class="info" style="color:#b7ffb7">+${h.win}</div>
+          </div>
+        `).join('');
+      }
+      modalWrap(`
+        <div class="info" style="text-align:center; font-size:1.4rem; margin-bottom:10px">History</div>
+        <div style="display:flex; flex-direction:column; gap:8px; max-height:320px; overflow:auto">${body}</div>
+      `);
+    }
+    function showAchievements(){
+      const defs = [
+        {key:'firstWin',  icon:'🎯', title:'First Win', desc:'Win any spin'},
+        {key:'bigWin',    icon:'💰', title:'Big Win',  desc:'Win ×20 bet'},
+        {key:'megaWin',   icon:'💎', title:'Mega Win', desc:'Win ×100 bet'},
+        {key:'scatter5',  icon:'🜁', title:'Scatter Master', desc:'Get 5+ scatters'},
+        {key:'combo10',   icon:'🔥', title:'Combo Master',   desc:'Reach combo ×10'},
+        {key:'lucky777',  icon:'7️⃣', title:'Lucky 777',      desc:'Collect 5+ sevens'},
+      ];
+      const grid = defs.map(d=>{
+        const u = gameState.achievements[d.key];
+        return `
+          <div class="glass" style="padding:12px; border:1px solid ${u?'rgba(250,204,21,.7)':'rgba(255,255,255,.1)'}; ${u?'':'opacity:.6'}">
+            <div style="font-size:1.6rem">${u?d.icon:'🔒'}</div>
+            <div class="info" style="margin-top:4px">${d.title}</div>
+            <div class="subtle">${d.desc}</div>
+            <div style="margin-top:6px; ${u?'color:#b7ffb7':'opacity:.7'}">${u?'Unlocked':'Locked'}</div>
+          </div>
+        `;
+      }).join('');
+      modalWrap(`
+        <div class="info" style="text-align:center; font-size:1.4rem; margin-bottom:10px">Achievements</div>
+        <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:8px">${grid}</div>
+      `);
+    }
+    function modalWrap(inner){
+      const wrap = document.createElement('div');
+      wrap.style.cssText = `position:absolute; inset:0; display:flex; align-items:center; justify-content:center; z-index:50; background:rgba(0,0,0,.65)`;
+      wrap.innerHTML = `<div class="glass" style="max-width:640px; width:90%; padding:16px;">${inner}<div style="display:flex; justify-content:center; margin-top:10px"><button class="btn btn-spin">Close</button></div></div>`;
+      wrap.querySelector('button').addEventListener('click',()=>wrap.remove());
+      stage.appendChild(wrap);
+    }
+
+    function unlock(key){
+      if(!gameState.achievements[key]){ gameState.achievements[key]=true; toastAchievement(key); }
+    }
+    function toastAchievement(key){
+      const map = {
+        firstWin:{icon:'🎯', title:'First Win!'},
+        bigWin:{icon:'💰', title:'Big Win!'},
+        megaWin:{icon:'💎', title:'Mega Win!'},
+        scatter5:{icon:'🜁', title:'Scatter Master!'},
+        combo10:{icon:'🔥', title:'Combo Master!'},
+        lucky777:{icon:'7️⃣', title:'Lucky 777!'}
+      };
+      const a = map[key]; if(!a) return;
+      const div = document.createElement('div');
+      div.className='glass';
+      div.style.cssText='padding:10px 12px; display:flex; gap:8px; align-items:center; border:1px solid rgba(255,255,255,.12);';
+      div.innerHTML = `<div style="font-size:1.4rem">${a.icon}</div><div><div class="subtle" style="text-transform:uppercase; letter-spacing:.08em">Achievement</div><div class="info">${a.title}</div></div>`;
+      document.getElementById('achievementsArea').appendChild(div);
+      playSound(900,.25,'square',.3); setTimeout(()=>playSound(1200,.25,'square',.3),120);
+      setTimeout(()=>{ div.style.opacity='0'; div.style.transform='translateX(12px)'; setTimeout(()=>div.remove(),260); }, 3800);
+    }
+
+
+    function updateDisplay(){
+      $('balance').textContent = gameState.balance;
+      $('currentBet').textContent = BETS[gameState.currentBetIndex];
+      $('comboCount').textContent = `×${gameState.combo}`;
+      $('totalSpins').textContent = gameState.totalSpins;
+      $('totalWins').textContent = gameState.totalWinsCount;
+      $('biggestWin').textContent = gameState.biggestWin;
+
+      const p = Math.min((gameState.combo/10)*100, 100);
+      $('comboFill').style.width = `${p}%`;
+      $('comboText').textContent = gameState.combo;
+
+      if(gameState.freeSpins>0){
+        $('freeSpinsDisplay').style.display='block';
+        $('freeSpinsCount').textContent = gameState.freeSpins;
+      }else{
+        $('freeSpinsDisplay').style.display='none';
+      }
+      if(gameState.multiplier>1){
+        $('multiplierDisplay').style.display='block';
+        $('currentMultiplier').textContent = `×${gameState.multiplier.toFixed(1)}`;
+      }else{
+        $('multiplierDisplay').style.display='none';
+      }
+    }
+
+   
+    init();
+  </script>
+</body>
+</html>

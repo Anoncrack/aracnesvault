@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      :root {
+        --av-purple: #7f2cff;
+        --av-cyan: #3cf2ff;
+        --av-blue: #2935ff;
+        --av-dark: #070410;
+        --av-neon: rgba(130, 61, 255, 0.65);
+        --av-cyan-neon: rgba(60, 255, 255, 0.6);
+      }
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        font-family: Inter, system-ui, sans-serif;
+        background: radial-gradient(
+            900px 600px at 50% 10%,
+            rgba(127, 44, 255, 0.25),
+            transparent 70%
+          ),
+          radial-gradient(
+            600px 400px at 80% 60%,
+            rgba(60, 255, 255, 0.18),
+            transparent 70%
+          ),
+          linear-gradient(180deg, #05030a 0, #0b0614 60%, #0a0718 100%);
+        color: #fff;
+        overflow: hidden;
+      }
+      .orb {
+        position: absolute;
+        border-radius: 50%;
+        mix-blend-mode: screen;
+        filter: blur(60px);
+        animation: float 14s infinite alternate ease-in-out;
+      }
+      #orb1 {
+        width: 260px;
+        height: 260px;
+        top: 15%;
+        left: 12%;
+        background: var(--av-neon);
+      }
+      #orb2 {
+        width: 160px;
+        height: 160px;
+        top: 65%;
+        left: 70%;
+        background: var(--av-cyan-neon);
+        animation-delay: 3s;
+      }
+      #orb3 {
+        width: 200px;
+        height: 200px;
+        top: 40%;
+        left: 45%;
+        background: rgba(80, 120, 255, 0.22);
+        animation-delay: 6s;
+      }
+      @keyframes float {
+        0% {
+          transform: translate(0, 0) scale(1);
+          opacity: 0.65;
+        }
+        100% {
+          transform: translate(40px, -35px) scale(1.25);
+          opacity: 1;
+        }
+      }
+      .slot-container {
+        background: rgba(10, 6, 25, 0.75);
+        border: 2px solid rgba(130, 61, 255, 0.45);
+        border-radius: 20px;
+        box-shadow: 0 0 40px rgba(130, 61, 255, 0.45),
+          inset 0 0 20px rgba(255, 255, 255, 0.03),
+          inset 0 0 35px rgba(60, 255, 255, 0.12);
+        backdrop-filter: blur(8px);
+        position: relative;
+      }
+      .slot-glow {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        background: radial-gradient(
+          circle,
+          rgba(60, 255, 255, 0.18),
+          transparent 70%
+        );
+        opacity: 0;
+        transition: opacity 0.5s;
+      }
+      .slot-glow.active {
+        opacity: 1;
+        animation: glowPulse 1.6s ease-out;
+      }
+      @keyframes glowPulse {
+        0% {
+          opacity: 0.8;
+          transform: scale(1);
+        }
+        50% {
+          opacity: 1;
+          transform: scale(1.15);
+        }
+        100% {
+          opacity: 0;
+        }
+      }
+      .reel {
+        background: linear-gradient(180deg, #120b24 0, #1c1235 100%);
+        border-radius: 12px;
+        border: 2px solid rgba(130, 61, 255, 0.35);
+        box-shadow: inset 0 0 10px rgba(130, 61, 255, 0.45);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.1s ease;
+      }
+      .symbol {
+        font-size: 3rem;
+        text-shadow: 0 0 15px var(--av-neon);
+      }
+      .reel.spin-blur {
+        filter: blur(6px) brightness(1.2);
+        animation: wobble 0.12s infinite alternate ease-in-out;
+      }
+      @keyframes wobble {
+        from {
+          transform: translateY(1px);
+        }
+        to {
+          transform: translateY(-1px);
+        }
+      }
+      .win-cell {
+        box-shadow: 0 0 0 2px rgba(60, 255, 255, 0.75) inset,
+          0 0 18px rgba(60, 255, 255, 0.55);
+        animation: winPulse 0.9s ease-in-out 2;
+      }
+      @keyframes winPulse {
+        0% {
+          filter: brightness(1);
+        }
+        50% {
+          filter: brightness(1.25);
+        }
+        100% {
+          filter: brightness(1);
+        }
+      }
+      .btn {
+        background: linear-gradient(135deg, #6120ff, #3b148e);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        padding: 12px 24px;
+        border-radius: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        cursor: pointer;
+        box-shadow: 0 4px 18px rgba(127, 44, 255, 0.4);
+        transition: 0.25s;
+      }
+      .btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 25px rgba(90, 35, 255, 0.65);
+      }
+      .btn-spin {
+        background: linear-gradient(135deg, #3cf2ff, #37b7ff);
+        color: #09051a;
+        font-size: 1.6rem;
+        padding: 18px 48px;
+        font-weight: 800;
+        box-shadow: 0 0 35px rgba(60, 255, 255, 0.55);
+      }
+      .balance-display {
+        background: rgba(15, 10, 30, 0.75);
+        border: 2px solid rgba(127, 44, 255, 0.45);
+        border-radius: 14px;
+        padding: 16px 20px;
+        text-align: center;
+        color: #c0a8ff;
+        font-weight: 700;
+        box-shadow: 0 0 20px rgba(127, 44, 255, 0.3);
+      }
+      .free-spins-badge {
+        background: linear-gradient(135deg, #7f2cff, #5926c9);
+        padding: 8px 20px;
+        border-radius: 999px;
+        font-weight: 800;
+        box-shadow: 0 0 22px rgba(127, 44, 255, 0.55);
+        animation: pulse 1s infinite;
+      }
+      @keyframes pulse {
+        0%,
+        100% {
+          transform: scale(1);
+          opacity: 0.7;
+        }
+        50% {
+          transform: scale(1.05);
+          opacity: 1;
+        }
+      }
+    </style>
+  </head>
+  <body class="flex items-center justify-center min-h-screen p-6">
+    <div id="orb1" class="orb"></div>
+    <div id="orb2" class="orb"></div>
+    <div id="orb3" class="orb"></div>
+    <div class="w-full max-w-5xl relative z-10">
+      <div id="particles"></div>
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
+        <div
+          class="flex lg:flex-col flex-row justify-center gap-4 order-2 lg:order-1"
+        >
+          <div class="balance-display">
+            <div class="text-sm opacity-70">Vault Balance</div>
+            <div id="balance" class="text-2xl">1000</div>
+          </div>
+          <div class="balance-display">
+            <div class="text-sm opacity-70">Bet Amount</div>
+            <div id="currentBet" class="text-2xl">1</div>
+          </div>
+          <div id="freeSpinsDisplay" class="free-spins-badge hidden">
+            ⚡ Arcane Spins: <span id="freeSpinsCount">0</span>
+          </div>
+          <div id="winDisplay" class="balance-display hidden">
+            <div class="text-sm opacity-70">Win</div>
+            <div id="winAmount" class="text-2xl text-cyan-300">0</div>
+          </div>
+        </div>
+        <div class="order-1 lg:order-2 relative">
+          <div class="slot-container sm:scale-100 scale-15 p-6 relative">
+            <div id="slotGlow" class="slot-glow"></div>
+            <div id="slotMachine" class="grid grid-cols-3 gap-3"></div>
+          </div>
+          <div class="mt-6 flex flex-wrap justify-center gap-3">
+            <button id="decreaseBet" class="btn text-xl px-6">−</button>
+            <button id="spinBtn" class="btn btn-spin">SPIN</button>
+            <button id="increaseBet" class="btn text-xl px-6">+</button>
+            <button id="soundBtn" class="btn">🔊</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      const SYMBOLS = {
+          shard: { emoji: "⟡", multiplier: 2, weight: 28 },
+          spark: { emoji: "✦", multiplier: 5, weight: 25 },
+          moon: { emoji: "☽", multiplier: 10, weight: 20 },
+          flame: { emoji: "⚡", multiplier: 20, weight: 15 },
+          sigil: { emoji: "⟠", multiplier: 50, weight: 8 },
+          scatter: { emoji: "⟁", multiplier: 0, weight: 3 },
+        },
+        container = document.getElementById("particles");
+      for (let e = 0; e < 120; e++) {
+        const e = document.createElement("div");
+        (e.className = "particle"),
+          (e.style.left = 100 * Math.random() + "%"),
+          (e.style.top = 100 * Math.random() + "%"),
+          (e.style.animationDelay = 8 * Math.random() + "s"),
+          (e.style.background = `hsla(${
+            180 + 180 * Math.random()
+          },80%,75%,.9)`),
+          container.appendChild(e);
+      }
+      const PAYLINES = [
+          [
+            [0, 0],
+            [0, 1],
+            [0, 2],
+          ],
+          [
+            [1, 0],
+            [1, 1],
+            [1, 2],
+          ],
+          [
+            [2, 0],
+            [2, 1],
+            [2, 2],
+          ],
+          [
+            [0, 0],
+            [1, 1],
+            [2, 2],
+          ],
+          [
+            [2, 0],
+            [1, 1],
+            [0, 2],
+          ],
+        ],
+        BETS = [1, 3, 5, 10, 25, 50];
+      let balance = 1e3,
+        currentBetIndex = 0,
+        freeSpins = 0,
+        isSpinning = !1,
+        soundEnabled = !0,
+        reels = [[], [], []];
+      const audioContext = new (window.AudioContext ||
+        window.webkitAudioContext)();
+      function playSound(e, t, n = "sine", i = 0.3) {
+        if (!soundEnabled) return;
+        const l = audioContext.createOscillator(),
+          o = audioContext.createGain();
+        l.connect(o),
+          o.connect(audioContext.destination),
+          (l.frequency.value = e),
+          (l.type = n),
+          o.gain.setValueAtTime(i, audioContext.currentTime),
+          o.gain.exponentialRampToValueAtTime(
+            0.01,
+            audioContext.currentTime + t
+          ),
+          l.start(),
+          l.stop(audioContext.currentTime + t);
+      }
+      function init() {
+        createReels(),
+          updateDisplay(),
+          document.getElementById("spinBtn").addEventListener("click", spin),
+          document
+            .getElementById("increaseBet")
+            .addEventListener("click", () => {
+              currentBetIndex < BETS.length - 1 &&
+                (currentBetIndex++, updateDisplay(), playSound(500, 0.1));
+            }),
+          document
+            .getElementById("decreaseBet")
+            .addEventListener("click", () => {
+              currentBetIndex > 0 &&
+                (currentBetIndex--, updateDisplay(), playSound(400, 0.1));
+            }),
+          document.getElementById("soundBtn").addEventListener("click", () => {
+            (soundEnabled = !soundEnabled),
+              (document.getElementById("soundBtn").textContent = soundEnabled
+                ? "🔊"
+                : "🔇"),
+              playSound(600, 0.1);
+          });
+      }
+      function createReels() {
+        const e = document.getElementById("slotMachine");
+        e.innerHTML = "";
+        for (let t = 0; t < 3; t++)
+          for (let n = 0; n < 3; n++) {
+            const i = document.createElement("div");
+            i.className = "reel aspect-square";
+            const l = document.createElement("div");
+            (l.className = "symbol"),
+              (l.textContent = getRandomSymbol()),
+              i.appendChild(l),
+              e.appendChild(i),
+              reels[t] || (reels[t] = []),
+              (reels[t][n] = l.textContent);
+          }
+      }
+      function getRandomSymbol() {
+        const e = Object.values(SYMBOLS).reduce((e, t) => e + t.weight, 0);
+        let t = Math.random() * e;
+        for (const e of Object.values(SYMBOLS))
+          if (((t -= e.weight), t <= 0)) return e.emoji;
+        return SYMBOLS.crystal.emoji;
+      }
+      async function spin() {
+        if (isSpinning) return;
+        const e = document.getElementById("slotGlow"),
+          t = BETS[currentBetIndex];
+        if (0 === freeSpins && balance < t)
+          return void alert("Not enough balance!");
+        (isSpinning = !0),
+          (document.getElementById("spinBtn").disabled = !0),
+          document.getElementById("winDisplay").classList.add("hidden"),
+          clearWinHighlights(),
+          e.classList.remove("active"),
+          playSound(250, 0.35, "sawtooth"),
+          0 === freeSpins ? (balance -= t) : freeSpins--,
+          updateDisplay(),
+          await animateSpin();
+        const n = checkWins();
+        countScatters() >= 3 &&
+          setTimeout(() => alert("💫 3 Scatters! +5 Free Spins!"), 400),
+          n.totalWin > 0 &&
+            (e.classList.add("active"),
+            playWinSound(),
+            (balance += n.totalWin),
+            displayWin(n),
+            highlightWins(n.cells)),
+          updateDisplay(),
+          (isSpinning = !1),
+          (document.getElementById("spinBtn").disabled = !1);
+      }
+      async function animateSpin() {
+        const e = [1e3, 1500, 2e3],
+          t = [0, 1, 2]
+            .map((e) =>
+              Array.from(document.querySelectorAll(".reel")).slice(
+                3 * e,
+                3 * e + 3
+              )
+            )
+            .map(
+              (t, n) =>
+                new Promise((i) => {
+                  t.forEach((e) => e.classList.add("spin-blur"));
+                  const l = e[n];
+                  const o = setInterval(() => {
+                    for (let e = 0; e < 3; e++) {
+                      t[e].firstElementChild.textContent = getRandomSymbol();
+                    }
+                  }, 60);
+                  setTimeout(() => {
+                    clearInterval(o);
+                    for (let e = 0; e < 3; e++) {
+                      const i = t[e].firstElementChild,
+                        l = getRandomSymbol();
+                      (i.textContent = l), (reels[n][e] = l);
+                    }
+                    t.forEach((e) => e.classList.remove("spin-blur")),
+                      playSound(320 + 120 * n, 0.15),
+                      i();
+                  }, l);
+                })
+            );
+        await Promise.all(t);
+      }
+      function playWinSound() {
+        playSound(600, 0.28, "sine", 0.4),
+          playSound(900, 0.24, "triangle", 0.32),
+          playSound(1200, 0.45, "sine", 0.3);
+      }
+      function checkWins() {
+        let e = 0,
+          t = 0;
+        const n = [];
+        return (
+          PAYLINES.forEach((i) => {
+            const l = i.map(([e, t]) => reels[t][e]),
+              o = l[0];
+            if (o !== SYMBOLS.scatter.emoji && l.every((e) => e === o)) {
+              const l = Object.values(SYMBOLS).find((e) => e.emoji === o);
+              (e += l.multiplier * BETS[currentBetIndex]), t++, n.push(...i);
+            }
+          }),
+          { totalWin: e, winCount: t, cells: n }
+        );
+      }
+      function highlightWins(e) {
+        e &&
+          e.length &&
+          (e.forEach(([e, t]) => {
+            const n = 3 * t + e,
+              i = document.querySelectorAll(".reel")[n];
+            i && i.classList.add("win-cell");
+          }),
+          setTimeout(clearWinHighlights, 1200));
+      }
+      function clearWinHighlights() {
+        document
+          .querySelectorAll(".reel.win-cell")
+          .forEach((e) => e.classList.remove("win-cell"));
+      }
+      function countScatters() {
+        let e = 0;
+        return (
+          reels.forEach((t) =>
+            t.forEach((t) => {
+              t === SYMBOLS.scatter.emoji && e++;
+            })
+          ),
+          e
+        );
+      }
+      function displayWin(e) {
+        (document.getElementById("winAmount").textContent = e.totalWin),
+          document.getElementById("winDisplay").classList.remove("hidden");
+      }
+      function updateDisplay() {
+        (document.getElementById("balance").textContent = balance),
+          (document.getElementById("currentBet").textContent =
+            BETS[currentBetIndex]);
+        const e = document.getElementById("freeSpinsDisplay");
+        freeSpins > 0
+          ? (e.classList.remove("hidden"),
+            (document.getElementById("freeSpinsCount").textContent = freeSpins))
+          : e.classList.add("hidden");
+      }
+      init();
+    </script>
+  </body>
+</html>

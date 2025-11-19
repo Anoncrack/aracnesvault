@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en-CA">
+<head>
+  <meta charset="UTF-8" />
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+
+  <title>ArcaneVault Games — Virtual Rune Worlds (Canada 19+) | VR Experiences Only</title>
+
+  <meta name="description" content="Discover ArcaneVault’s Virtual Rune (VR) experiences — atmospheric arcane worlds, interactive rune mechanisms, and fantasy-themed virtual play. Canada (19+). No prizes, no real-money functionality — entertainment only.">
+
+  <link rel="canonical" href="https://arcanevault.com/games/" />
+
+  <meta name="author" content="ArcaneVault">
+
+  <meta name="keywords" content="arcane games, virtual runes, VR experiences, rune interactions, fantasy virtual worlds, atmospheric virtual play, Canada 19+, entertainment only">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="ArcaneVault — Virtual Rune Games (Canada 19+)" />
+  <meta property="og:description" content="Explore ArcaneVault's virtual rune-powered experiences. VR-based, atmospheric and entertainment-only." />
+  <meta property="og:image" content="https://arcanevault.com/assets/logo.webp" />
+  <meta property="og:url" content="https://arcanevault.com/games/" />
+  <meta property="og:type" content="website" />
+  <link rel="icon" href="/assets/logo.webp" />
+  <link rel="shortcut icon" href="/assets/logo.webp" />
+  <link rel="stylesheet" href="/assets/styles.css" />
+
+  </head>
+
+
+<body class="bg-rune-dark text-gray-100">
+
+  <header id="main-header"
+  class="fixed top-0 left-0 w-full z-50 transition-all duration-300 
+         bg-transparent py-4">
+
+<div class="container mx-auto md:px-24 px-4 py-4 
+        flex items-center justify-between">
+
+<!-- LOGO -->
+<a href="/" class="flex items-center space-x-3 group">
+<img id="site-logo" src="/assets/logo.webp"
+     class="h-8 w-10 drop-shadow-[0_0_6px_var(--color-gold-soft)]"
+     alt="Arcane Vault Logo">
+
+<span class="text-rune font-Cinzel text-2xl font-bold
+             transition group-hover:text-gold-dark">
+  Arcane Vault
+</span>
+</a>
+
+
+<!-- DESKTOP NAV -->
+<nav class="hidden md:block flex-grow">
+<ul class="flex justify-center space-x-10">
+
+  <li><a href="/"
+    class="nav-link">Home</a></li>
+
+  <li><a href="/about/"
+    class="nav-link">About</a></li>
+
+  <li><a href="/#news"
+    class="nav-link">News</a></li>
+
+  <li><a href="/games/"
+    class="nav-link">Games</a></li>
+
+  <li><a href="/#testimonials"
+    class="nav-link">Testimonials</a></li>
+
+  <li><a href="/about/#faq"
+    class="nav-link">FAQ</a></li>
+
+</ul>
+</nav>
+
+
+<!-- DESKTOP CONTACT -->
+<div class="hidden md:block">
+<a href="/#contact"
+   class="px-6 py-3 rounded-lg font-semibold font-Montserrat
+          border border-gold text-gold
+          hover:bg-gold hover:text-bg-dark
+          shadow-[0_0_12px_var(--color-gold-soft)]
+          transition">
+  Contact Us
+</a>
+</div>
+
+
+<!-- MOBILE BTN -->
+<button id="mobile-menu-button"
+      class="md:hidden p-2  hover:text-gold transition">
+<svg id="menu-icon" class="h-7 w-7" fill="none" stroke="currentColor"
+     viewBox="0 0 24 24">
+  <path id="menu-path"
+        stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M4 6h16M4 12h16m-7 6h7"></path>
+</svg>
+</button>
+
+</div>
+</header>
+<div id="mobile-menu"
+class="fixed inset-0 top-0 left-0 w-full h-screen
+      bg-bg-dark/95 backdrop-blur-xl
+      transform -translate-y-full transition duration-500 ease-in-out
+      z-40 md:hidden flex flex-col justify-center items-center space-y-8">
+
+<h2 class=" font-Cinzel text-3xl mb-6 tracking-wide drop-shadow">
+Menu
+</h2>
+
+<ul class="flex flex-col space-y-6 text-center text-2xl font-Montserrat">
+
+<li><a href="/" class="mobile-link">Home</a></li>
+<li><a href="/about/" class="mobile-link">About</a></li>
+<li><a href="/#news" class="mobile-link">News</a></li>
+<li><a href="/games/" class="mobile-link">Free Games</a></li>
+<li><a href="/#testimonials" class="mobile-link">Testimonials</a></li>
+<li><a href="/about/#faq" class="mobile-link">FAQ</a></li>
+<li><a href="/#contact" class="mobile-link">Contact Us</a></li>
+
+</ul>
+
+</div>
+
+<section class="relative flex flex-col items-center overflow-hidden 
+  bg-gradient-to-br from-bg-dark via-bg to-bg py-24 md:py-10 hero-runes-section text-text">
+
+  <img src="/assets/logo.webp" alt="logo" class="h-130 w-130">
+  
+
+  <!-- arcane glows -->
+  <div class="absolute -top-24 -left-24 w-[440px] h-[440px] 
+              rounded-full bg-gold-soft/40 blur-[140px] animate-pulse-slow"></div>
+  <div class="absolute -bottom-28 -right-28 w-[400px] h-[400px] 
+              rounded-full bg-rune-soft/35 blur-[140px] animate-pulse-slower"></div>
+
+  <div class="container mx-auto px-6 md:px-12 lg:px-20 relative z-10 text-center text-shadow-heavy">
+    <h1 class="uppercase text-4xl md:text-6xl font-extrabold tracking-tight leading-tight animate-fade-in-up font-Cinzel">
+      Rune Games in <span class="text-gold drop-shadow-[0_0_10px_var(--color-gold-soft)]">Arcane Vault</span>
+    </h1>
+
+    <p class="mt-5 md:mt-6 text-lg md:text-xl leading-relaxed animate-fade-in-up delay-150 
+              text-text-soft max-w-3xl mx-auto font-Montserrat">
+      Arcane Vault is a 19+ platform for games powered by 
+      <span class="text-rune-light font-semibold">Virtual Runes (VR)</span>.  
+      Explore Rune Slots and Spin Runes in a cozy, arcane atmosphere — no real-money play, 
+      no cash-outs, no prizes. Entertainment only.
+    </p>
+
+    <!-- CTA buttons -->
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-4">
+      <a href="/games/#top" 
+         class="btn-gold-glow btn-press rounded-2xl px-7 py-3 text-base md:text-lg font-semibold">
+        Browse Rune Slots & Spin Runes
+      </a>
+      <a href="/#contact" 
+         class="btn-purple-glow btn-press rounded-2xl px-7 py-3 text-base md:text-lg font-semibold">
+        Contact Arcane Vault
+      </a>
+    </div>
+
+    <!-- tiny badges / highlights -->
+    <div class="mt-6 flex flex-wrap justify-center gap-3 text-xs md:text-sm text-text-soft">
+      <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">
+        Canada-focused, 19+
+      </span>
+      <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">
+        Virtual Runes (VR) only
+      </span>
+      <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">
+        Rune Slots & Spin Runes
+      </span>
+      <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">
+        Relaxed, cosmetic progression
+      </span>
+    </div>
+
+   
+  </div>
+</section>
+
+<section id="top" class="relative py-24 overflow-hidden 
+  bg-gradient-to-bl from-rune-soft/40 via-bg-dark to-bg">
+
+  <!-- Arcane glows -->
+  <div class="pointer-events-none absolute -top-28 -left-24 w-[36rem] h-[36rem] 
+              rounded-full blur-3xl"
+       style="background:radial-gradient(circle, rgba(255,199,44,0.18), transparent 60%)"></div>
+
+  <div class="pointer-events-none absolute -bottom-32 -right-28 w-[40rem] h-[40rem] 
+              rounded-full blur-3xl"
+       style="background:radial-gradient(circle, rgba(140,120,240,0.16), transparent 60%)"></div>
+
+
+  <div class="container mx-auto md:px-24 px-4 relative">
+
+    <!-- HEADER -->
+    <div class="text-center mb-14">
+      <h2 class="text-4xl lg:text-5xl font-extrabold font-Cinzel text-text">
+        ArcaneVault <span class="text-gold drop-shadow-[0_0_10px_var(--color-gold-soft)]">Rune Slots</span>
+      </h2>
+      <p class="text-text-soft max-w-3xl mx-auto mt-3 font-Montserrat">
+        Enter the Arcane Vault — a cozy world of Rune Slots and Spin Runes powered by 
+        <span class="text-rune-light font-semibold">Virtual Runes (VR)</span>.  
+        Relaxing animations, soft magic, seasonal skins, and 100% free entertainment.  
+        No real-money play, no prizes — just pure arcane atmosphere.
+      </p>
+    </div>
+
+
+    <!-- ============================
+         ROW 1 — Mystic Runes
+    ==============================-->
+    <article class="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center my-16 opacity-40 pointer-events-none select-none relative">
+
+      <!-- DARK OVERLAY -->
+      <div class="absolute inset-0 z-20 bg-bg-dark/80 backdrop-blur-sm flex items-center justify-center rounded-2xl">
+        <span class="text-gold font-Cinzel text-2xl md:text-3xl drop-shadow-[0_0_10px_var(--color-gold-soft)]">
+          Temporarily Unavailable
+        </span>
+      </div>
+    
+      <!-- IMAGE -->
+      <div class="lg:col-span-7">
+        <div class="relative group rounded-2xl overflow-hidden 
+                    ring-1 ring-surface-alt/60 bg-surface/60 
+                    border-2 border-gold/30 transform transition">
+    
+          <img src="/assets/game.png" alt="Mystic Runes artwork"
+               class="w-full h-[320px] lg:h-[360px] object-cover">
+    
+          <div class="absolute inset-0 bg-gradient-to-t from-bg-dark/80 via-bg-dark/40 to-bg-dark/80"></div>
+    
+          <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-rune-soft/40 text-text">
+            Rune Slot
+          </span>
+    
+          <span class="absolute top-3 left-20 text-[11px] px-2 py-1 rounded-full bg-gold-soft/50 text-bg-dark">
+            Free
+          </span>
+        </div>
+      </div>
+    
+      <!-- TEXT -->
+      <div class="lg:col-span-5">
+        <h3 class="text-2xl md:text-3xl font-extrabold font-Cinzel text-gold">
+          Mystic Runes
+        </h3>
+    
+        <p class="text-text-soft mt-3 font-Montserrat">
+          Drift into the serene aura of <strong>Mystic Runes</strong> — glowing sigils, ancient carvings,
+          and soft magical pulses guide every VR-powered spin.
+          A slow, relaxing Rune Slot crafted for calm evenings and cozy progression.
+        </p>
+    
+        <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-soft">
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">Free to play</span>
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">VR-powered</span>
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">Fantasy Theme</span>
+    
+          <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 17.3L18.2 21L16.6 13.8L22 9.2L14.9 8.5L12 2L9.1 8.5L2 9.2L7.4 13.8L5.8 21Z"/>
+          </svg>
+          
+    
+          <span class="inline-flex items-center gap-1">
+            <svg class="w-4 h-4 text-rune-light" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2L15 9H22L16 13L18 20L12 16L6 20L8 13L2 9H9Z"/>
+            </svg>
+            
+            <span data-online="mystic">3,500 Active</span>
+          </span>
+        </div>
+    
+        <div class="mt-6">
+          <button disabled
+            class="flex items-center justify-center gap-3 w-full 
+                   bg-gold/40 text-bg-dark/40 px-8 py-3 rounded-[7px] 
+                   font-extrabold text-lg shadow-none cursor-not-allowed">
+            Play
+            <svg class="w-5 h-5 opacity-40" fill="currentColor">
+              <polygon points="5,3 19,12 5,21"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    
+    </article>
+    
+
+
+
+    <!-- ============================
+         ROW 2 — Jungle Run
+    ==============================-->
+    <article class="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center mb-16">
+
+      <!-- IMAGE mob-first -->
+      <div class="order-1 lg:order-2 lg:col-span-7">
+        <div class="relative group rounded-2xl overflow-hidden 
+                    ring-1 ring-surface-alt/60 bg-surface/60 
+                    border-2 border-gold/30 transform hover:scale-105 hover:-rotate-2 transition">
+
+          <img src="/assets/gm2.png" alt="Jungle Run artwork"
+               class="w-full h-[320px] lg:h-[360px] object-cover transition group-hover:scale-105">
+
+          <div class="absolute inset-0 bg-gradient-to-t from-bg-dark/80 via-bg-dark/40 to-bg-dark/80"></div>
+
+          <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/10 text-text">Arcade Slot</span>
+          <span class="absolute top-3 left-28 text-[11px] px-2 py-1 rounded-full bg-gold-soft/50 text-bg-dark">Free</span>
+        </div>
+      </div>
+
+      <!-- TEXT -->
+      <div class="order-2 lg:order-1 lg:col-span-5">
+
+        <h3 class="text-2xl md:text-3xl font-extrabold font-Cinzel text-gold">Eldertree Dash</h3>
+
+
+        <p class="text-text-soft mt-3 font-Montserrat">
+          A vibrant Rune Slot where enchanted wildlife awakens with each spin.  
+          Lush vines, glowing idols, warm jungle ambience — Jungle Run is all about lively,
+          energetic VR spins and colorful, rhythmic animations.
+        </p>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-soft">
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">Free to play</span>
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">VR-only</span>
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">Adventure Theme</span>
+
+          <span class="inline-flex items-center gap-1">
+            <svg class="w-4 h-4 text-gold/60" fill="currentColor"><path d="M12 17.3 18.2 21"/></svg> 4.7
+          </span>
+
+          <span class="inline-flex items-center gap-1">
+            <svg class="w-4 h-4 text-rune-light" fill="currentColor"><path d="M12 12"/></svg>
+            <span data-online="poker">8,100 Active</span>
+          </span>
+        </div>
+
+        <div class="mt-6">
+          <button onclick="openGame('/Eldertree/')" 
+            class="flex items-center justify-center gap-3 w-full 
+                   bg-gold text-bg-dark px-8 py-3 rounded-[7px] 
+                   font-extrabold text-lg shadow-[0_0_20px_var(--color-gold-soft)]
+                   hover:bg-gold-dark transition">
+            Play 
+            <svg class="w-5 h-5" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+        </div>
+      </div>
+    </article>
+
+
+
+
+    <!-- ============================
+         ROW 3 — Astral Roulette
+    ==============================-->
+    <article class="grid grid-cols-1 lg:grid-cols-12 gap-14 items-center mb-16">
+
+      <!-- IMAGE -->
+      <div class="lg:col-span-7">
+        <div class="relative group rounded-2xl overflow-hidden 
+                    ring-1 ring-surface-alt/60 bg-surface/60 
+                    border-2 border-gold/30 transform hover:scale-105 hover:rotate-2 transition">
+
+          <img src="/assets/gm1.png" alt="Astral Orb artwork"
+               class="w-full h-[320px] lg:h-[360px] object-cover transition group-hover:scale-105">
+
+          <div class="absolute inset-0 bg-gradient-to-t from-bg-dark/80 via-bg-dark/40 to-bg-dark/80"></div>
+
+          <span class="absolute top-3 left-3 text-[11px] px-2 py-1 rounded-full bg-white/10 text-text">Rune Slot</span>
+          <span class="absolute top-3 left-20 text-[11px] px-2 py-1 rounded-full bg-gold-soft/50 text-bg-dark">New</span>
+        </div>
+      </div>
+
+      <!-- TEXT -->
+      <div class="lg:col-span-5">
+
+        <h3 class="text-2xl md:text-3xl font-extrabold font-Cinzel text-gold">Astral Orb Cycle</h3>
+
+        <p class="text-text-soft mt-3 font-Montserrat">
+          Drift through cosmic rings and nebula-lit trails where glowing orbs pulse in zero gravity.
+          Designed for fans of soft sci-fi ambience and calm, hypnotic VR spins.
+        </p>
+
+        <div class="mt-4 flex flex-wrap items-center gap-3 text-sm text-text-soft">
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">Free to play</span>
+          <span class="px-3 py-1 rounded-full bg-surface/60 ring-1 ring-surface-alt/60">Seasonal skins</span>
+
+          <span class="inline-flex items-center gap-1">
+            <svg class="w-4 h-4 text-gold" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 17.3L18.2 21L16.6 13.8L22 9.2L14.9 8.5L12 2L9.1 8.5L2 9.2L7.4 13.8L5.8 21Z"/>
+            </svg>
+            
+          </span>
+
+          <span class="inline-flex items-center gap-1">
+            <svg class="w-4 h-4 text-rune-light" fill="currentColor"><path d="M12 12"/></svg>
+            <span data-online="galactic">1,200 Active</span>
+          </span>
+        </div>
+
+        <div class="mt-6">
+          <button onclick="openGame('/Astral/')" 
+            class="flex items-center justify-center gap-3 w-full 
+                   bg-gold text-bg-dark px-8 py-3 rounded-[7px] 
+                   font-extrabold text-lg shadow-[0_0_20px_var(--color-gold-soft)]
+                   hover:bg-gold-dark transition">
+            Play 
+            <svg class="w-5 h-5" fill="currentColor"><polygon points="5,3 19,12 5,21"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </article>
+
+
+
+    <!-- DISCLAIMER -->
+    <p class="text-center text-[12px] text-text-soft/70 mt-10 max-w-3xl mx-auto font-Montserrat">
+      19+ entertainment only. Virtual Runes (VR) hold no monetary value and cannot be exchanged for anything of value.
+      No real-money play or prizes. Available in Canada.
+    </p>
+
+
+
+    <!-- ============================
+         MODAL — untouched logic, styled
+    ==============================-->
+    <div id="olympus-game-modal" class="hidden">
+      <div class="fixed inset-0 z-[999999] flex items-center justify-center bg-black/95 p-4 sm:p-6">
+
+        <div class="relative w-full max-w-7xl h-full sm:h-[90vh] 
+                    bg-bg-dark rounded-2xl overflow-hidden 
+                    border border-gold-soft/60 shadow-2xl">
+
+          <!-- close button -->
+          <button onclick="closeGame()" id="close-game-button"
+            class="absolute top-4 right-4 z-[9999999] 
+                   bg-white/10 hover:bg-gold hover:text-bg-dark 
+                   text-white w-10 h-10 md:w-12 md:h-12 rounded-full 
+                   flex items-center justify-center text-4xl 
+                   transition-all duration-300 shadow-xl">
+            &times;
+          </button>
+
+          <!-- layout -->
+          <div class="relative w-full h-full flex md:flex-row flex-col">
+
+            <!-- GAME IFRAME -->
+            <iframe id="game-iframe" src="" 
+              class="w-full h-full md:rounded-l-2xl bg-black"
+              frameborder="0" allowfullscreen 
+              sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-top-navigation allow-popups-to-escape-sandbox">
+            </iframe>
+
+            <!-- SIDE INFO PANEL -->
+            <div class="w-full h-auto md:w-[200px] md:h-full 
+                        bg-gradient-to-b from-bg-dark to-rune-soft/30 
+                        border-t md:border-t-0 border-l md:border-l-2 border-gold-soft/60 
+                        flex flex-row md:flex-col items-center justify-around md:justify-center 
+                        space-x-4 md:space-x-0 md:space-y-8 p-3 md:p-6 shadow-2xl shrink-0">
+
+              <div class="text-center p-2">
+                <svg class="w-7 h-7 md:w-8 md:h-8 mx-auto text-gold drop-shadow-lg"
+                     fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                </svg>
+                <p class="mt-1 text-xs md:text-sm font-semibold text-text-soft tracking-widest">
+                  100% Free
+                </p>
+              </div>
+
+              <div class="text-center p-2">
+                <div class="text-3xl md:text-4xl font-extrabold text-gold drop-shadow-lg font-Cinzel">
+                  19+
+                </div>
+                <p class="mt-0.5 text-xs md:text-sm font-semibold text-text-soft tracking-widest">
+                  Age Required
+                </p>
+              </div>
+
+              <div class="text-center p-2">
+                <svg class="w-7 h-7 md:w-8 md:h-8 mx-auto text-rune-light drop-shadow-lg"
+                     fill="none" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M9 12l2 2l4-4m5.618-4.015A11.955 11.955 0 0112 2.5a11.955 11.955 0 01-8.618 5.485A12.001 12.001 0 0012 21a12.001 12.001 0 008.618-14.015z"/>
+                </svg>
+                <p class="mt-1 text-xs md:text-sm font-semibold text-text-soft tracking-widest">
+                  Safe Play
+                </p>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<script>
+        const gameIframe = document.getElementById('game-iframe');
+const closeButton = document.getElementById('close-game-button');
+const modal = document.getElementById('olympus-game-modal'); // Ваше модальное окно
+
+// === Функция для закрытия (ОБНОВИТЕ ЭТУ ФУНКЦИЮ) ===
+function closeGame() {
+    // Временно делаем iframe неактивным для касаний
+    if (gameIframe) {
+        gameIframe.style.pointerEvents = 'none';
+    }
+
+    if (modal) {
+        modal.classList.add('hidden');
+    }
+    
+    // Очищаем источник iframe через короткое время
+    setTimeout(() => {
+        if (gameIframe) {
+            gameIframe.src = ''; 
+        }
+    }, 500); 
+}
+
+// === Дополнительная логика для принудительного срабатывания ===
+// Этот слушатель принудительно отключает pointer-events на iframe
+// в момент касания кнопки закрытия, чтобы гарантировать, что событие не будет перехвачено.
+if (closeButton) {
+    closeButton.addEventListener('touchstart', (e) => {
+        e.stopPropagation(); // Останавливаем распространение события
+        if (gameIframe) {
+            gameIframe.style.pointerEvents = 'none';
+        }
+    }, { passive: true }); // Используем {passive: true} для повышения производительности на мобильных
+}
+
+
+// === Дополнительно: функция для открытия (ЕСЛИ ОНА У ВАС ЕСТЬ) ===
+// Когда модальное окно открывается, мы должны убедиться, что pointer-events включены.
+// (Если у вас нет этой функции, проигнорируйте этот блок)
+function openGame(url) {
+    if (gameIframe) {
+        gameIframe.src = url;
+        gameIframe.style.pointerEvents = 'auto'; // Включаем pointer-events
+    }
+    if (modal) {
+        modal.classList.remove('hidden');
+    }
+}
+    </script>
+
+
+
+
+
+<footer class="bg-bg-dark  pt-16 pb-10 border-t border-surface/40 relative">
+
+  <div class="absolute -top-24 left-10 w-72 h-72 bg-gold-soft/15 rounded-full blur-3xl"></div>
+  <div class="absolute bottom-0 right-10 w-64 h-64 bg-rune-soft/20 rounded-full blur-[100px]"></div>
+
+  <div class="container mx-auto px-6 md:px-24 relative z-10">
+
+    <div class="flex flex-col md:flex-row md:justify-between gap-y-12">
+
+      <!-- BRAND -->
+      <div class="max-w-sm">
+        <div class="flex items-center mb-5">
+          <img src="/assets/logo.webp" alt="ArcaneVault" class="w-12 h-10 opacity-90 drop-shadow-md">
+          <span class="ml-3 text-2xl font-Cinzel font-bold text-gold drop-shadow-[0_0_10px_var(--color-gold-soft)]">
+            ArcaneVault
+          </span>
+        </div>
+
+        <p class=" leading-relaxed font-light text-[17px]">
+          <span class="text-gold font-semibold">Virtual Runes</span> only — 
+          no real-money play.  Canadian 19+ Only.
+         
+         
+        </p>
+      </div>
+
+
+      <!-- LEGAL -->
+      <div>
+        <h3 class="text-lg font-Cinzel font-semibold  mb-4">Legal</h3>
+        <ul class="space-y-2">
+          <li><a href="/cookie-policy/" class=" hover:text-gold transition text-[17px]">Cookie Policy</a></li>
+          <li><a href="/privacy-policy/" class=" hover:text-gold transition text-[17px]">Privacy Policy</a></li>
+          <li><a href="/terms-of-use/" class=" hover:text-gold transition text-[17px]">Terms of Use</a></li>
+    
+             
+        </ul>
+      </div>
+
+
+      <!-- NEWSLETTER -->
+      <div class="max-w-sm">
+        <h3 class="text-lg font-Cinzel font-semibold  mb-4">Get Updates</h3>
+
+        <p class=" mb-4 font-light text-[17px]">
+          Receive updates about new free rune-based experiences and features.
+        </p>
+
+        <form id="footer-newsletter" class="flex flex-col sm:flex-row gap-3">
+          <input id="footer-email" type="email" required
+                 placeholder="Your email address"
+                 class="w-full rounded-lg sm:flex-1 bg-bg border border-surface px-3 py-2 
+                        placeholder-text-soft/40 focus:outline-none focus:border-gold  transition">
+          
+          <button id="footer-submit" type="submit"
+                  class="bg-gold text-bg-dark px-5 py-2 rounded-lg font-semibold 
+                         shadow-[0_0_15px_var(--color-gold-soft)] hover:bg-gold-dark 
+                         transition text-lg">
+            Subscribe
+          </button>
+        </form>
+
+        <p id="footer-news-success"
+           class="mt-3 text-sm text-rune-light opacity-0 transition-opacity duration-500">
+           Subscription confirmed ✓
+        </p>
+      </div>
+
+    </div>
+
+
+    <!-- BOTTOM STRIP -->
+    <div class="border-t border-surface/40 mt-12 pt-6 
+                flex flex-col md:flex-row justify-between items-center text-sm">
+
+      <p class="/70 font-light text-[17px]">
+        © <span id="footer-year"></span> ArcaneVault — Virtual Rune Entertainment. 19+ Canada Only.
+      </p>
+
+      <div class="flex space-x-4 mt-4 md:mt-0 text-2xl">
+        <span class="/60 hover:text-gold transition cursor-default">⭐</span>
+        <span class="/60 hover:text-gold transition cursor-default">✨</span>
+      </div>
+
+    </div>
+
+  </div>
+</footer>
+
+<script>
+  document.getElementById("footer-year").textContent = new Date().getFullYear();
+  document.getElementById("footer-newsletter").addEventListener("submit", function(e) {
+    e.preventDefault();
+    const msg = document.getElementById("footer-news-success");
+    msg.style.opacity = "1";
+    setTimeout(() => { msg.style.opacity = "0"; }, 3500);
+    this.reset();
+  });
+</script>
+
+
+
+<div id="age-banner"
+   class="fixed right-6 bottom-[250px] z-[999]
+          bg-bg-dark/95 border border-gold/40 text-white
+          shadow-[0_0_20px_rgba(255,215,0,0.25)]
+          rounded-xl px-4 py-3 w-[280px]
+          opacity-0 transition-all duration-500
+          backdrop-blur-xl">
+
+<div class="flex gap-3">
+    <img src="/assets/age19.png" class="w-25 h-25 justify-self-center self-center flex-shrink-0" alt="19+">
+
+    <p class="text-sm leading-snug">
+      For Canadian players <b>19+</b> only. Virtual Runes only — no real-money play.
+    </p>
+</div>
+
+<div class="flex justify-end gap-5 mt-3">
+    <button id="age-later"
+    class="px-4 py-2 rounded-lg border border-white/30 bg-white/10
+    text-white hover:bg-white/20 transition font-semibold">
+        No, I'm not Adult
+    </button>
+
+    <button id="age-ok"
+    class="px-4 py-2 rounded-lg bg-gold text-bg-dark font-bold
+    hover:bg-gold-dark shrink-0 transition shadow-[0_0_10px_var(--color-gold-soft)]">
+        I'm 19+
+    </button>
+</div>
+
+</div>
+
+</div>
+
+
+
+<!-- COOKIE BANNER (BOTTOM) -->
+<div id="cookie-banner"
+class="fixed bottom-4 left-1/2 -translate-x-1/2 sm:left-auto sm:right-6 sm:translate-x-0 z-[998]
+     bg-bg-dark/90 border border-gold-soft text-white
+     shadow-[0_0_25px_var(--color-gold-soft)]
+     rounded-2xl px-5 py-5 w-[90%] max-w-sm
+     opacity-0 translate-y-6
+     backdrop-blur-xl transition-all duration-500 pointer-events-auto">
+
+<p class="text-base mb-4 leading-relaxed">
+ We use cookies to improve performance and personalize your free
+ ArcaneVault experience. By continuing, you agree to our 
+ <a href="/privacy-policy/" class="text-gold underline">Privacy Policy</a>
+ and
+ <a href="/cookie-policy/" class="text-gold underline">Cookie Policy</a>.
+</p>
+
+<div class="flex justify-end gap-3">
+ <button id="cookies-decline"
+         class="px-4 py-2 rounded-lg border border-white/30 bg-white/10
+                text-white hover:bg-white/20 transition font-semibold">
+     Decline
+ </button>
+
+ <button id="cookies-accept"
+         class="px-4 py-2 rounded-lg bg-gold text-bg-dark font-bold
+                hover:bg-gold-dark transition shadow-[0_0_10px_var(--color-gold-soft)]">
+     Accept
+ </button>
+</div>
+</div>
+
+
+<script type="module" src="/assets/script.js"></script>
+  </body>
+  </html>
